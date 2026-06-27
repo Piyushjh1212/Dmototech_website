@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <header class="hm-head-moto-header">
+        <div class="hm-head-moto-header-container">
+
+            <button class="hm-mobile-menu-toggle" onclick="toggleMobileNav()" title="Open Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="hm-head-moto-logo-area">
+                <a href="#">
+                    <img src="https://res.cloudinary.com/dhrqbdrkh/image/upload/v1782471800/dmotottech_awtowl.png"
+                        alt="DMotoTech Premium Logo" class="hm-head-moto-brand-logo">
+                </a>
+            </div>
+
+            <nav class="hm-head-moto-navbar">
+                <ul class="hm-head-moto-nav-list">
+                    <li><a href="../index.html" class="web-link" data-page="index.html">Home</a></li>
+                    <li><a href="./about.html" class="web-link" data-page="about.html">About</a></li>
+                    <li><a href="../Shop/Shop.html" class="web-link" data-page="shop.html">Shop</a></li>
+                    <li><a href="./blog.html" class="web-link" data-page="blog.html">Blog</a></li>
+                    <li><a href="./contact.html" class="web-link" data-page="contact.html">Contact</a></li>
+                    <li><a href="../My_Account_page/My_account.html" class="web-link" data-page="my_account.html">My
+                            account</a></li>
+                </ul>
+            </nav>
+
+            <div class="hm-head-moto-header-utils">
+                <a href="tel:+911234567890" class="hm-head-moto-utility-link" title="Call Us">
+                    <i class="fa-solid fa-phone"></i>
+                </a>
+
+                <a href="javascript:void(0)" class="hm-head-moto-utility-link" title="View Cart"
+                    onclick="toggleCartDrawer()">
+                    <svg class="cart-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="width:20px; height:20px;">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span id="headerCartCount" class="header-cart-badge">0</span>
+                </a>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer-panel" id="cartDrawer">
+        <div class="cart-drawer-header">
+            <div class="cart-header-left">
+                <h3 style="margin:0; font-size:15px; font-weight:700; letter-spacing:0.5px;">YOUR CART</h3>
+                <span id="cartDrawerSubCount" style="font-size:11px; color:#71717a; font-weight:500;">0 Items</span>
+            </div>
+            <button class="cart-drawer-close" onclick="toggleCartDrawer()">✕</button>
+        </div>
+
+        <div class="cart-drawer-content" id="cartDrawerContainer"></div>
+
+        <div class="cart-drawer-footer">
+            <div class="cart-total-bar">
+                <span style="color:#71717a; font-weight:500;">Subtotal Amount:</span>
+                <span id="cartDrawerTotal" style="color:#18181b;">₹0</span>
+            </div>
+            <p style="font-size:11px; color:#a1a1aa; margin-bottom:16px; text-align:center;">Shipping & taxes calculated
+                at
+                checkout.</p>
+            <button class="checkout-razorpay-btn" onclick="triggerRazorpayCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

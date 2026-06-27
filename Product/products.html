@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products List - Dochaki Premium Gear</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./Products.css ">
+    <link rel="stylesheet" href="../Header/header.css">
+    <link rel="stylesheet" href="../Footer/footer.css">
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../Header/header.js"></script>
+    <script src="./products.js"></script>
+
+
+</head>
+
+<body>
+    <div id="global-header"></div>
+
+    <!-- 2. SIDEBAR OVERLAY LAYER & DRAWER -->
+    <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer-panel" id="cartDrawer">
+        <div class="cart-drawer-header">
+            <h3>Your Shopping Cart</h3>
+            <button class="cart-drawer-close" onclick="toggleCartDrawer()">✕</button>
+        </div>
+        <div class="cart-drawer-content" id="cartDrawerContainer">
+            <!-- Items Render Automatically -->
+        </div>
+        <div class="cart-drawer-footer">
+            <div class="cart-total-bar">
+                <span>Total Amount:</span>
+                <span id="cartDrawerTotal">₹0</span>
+            </div>
+            <button class="checkout-whatsapp-btn" onclick="triggerCheckout()">Order via WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- 3. SHOPPING GRID CONTENT -->
+    <section class="dochaki-shop-wrapper">
+        <div class="dochaki-category-bar">
+            <button class="btn-back" onclick="window.location.href='../Shop/Shop.html'">⬅️ Back to Models</button>
+        </div>
+
+        <div class="dochaki-shop-header">
+            <h1 class="dochaki-shop-title" id="main-model-title">Premium Products</h1>
+            <p class="dochaki-shop-subtitle" id="product-count">Fetching model catalog...</p>
+        </div>
+
+        <div id="loading-state">Loading model specification setups...</div>
+        <div id="error-state" style="display: none;">No products configurations tracked for this model.</div>
+
+        <div class="dochaki-grid-2col" id="product-grid"></div>
+    </section>
+
+    <!-- Footer sectio here  -->
+
+    <div id="global-footer"></div>
+
+    <script>
+        fetch('../Header/header.html')
+            .then(response => response.text())
+            .then(data => {
+
+                // Header inject karo
+                document.getElementById('global-header').innerHTML = data;
+
+                // Header load hone ke baad cart sync karo
+                if (typeof forceSyncHomeCart === "function") {
+                    forceSyncHomeCart();
+                }
+
+                // Current page
+                const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+
+                // Sab active remove karo
+                const menuItems = document.querySelectorAll(".hm-head-moto-nav-list li");
+                menuItems.forEach(li => li.classList.remove("active-li"));
+
+                let activeFound = false;
+
+                // Current page active karo
+                menuItems.forEach(li => {
+
+                    const link = li.querySelector("a");
+                    if (!link) return;
+
+                    // href ka sirf filename lo
+                    const href = link.getAttribute("href").split("/").pop().toLowerCase();
+
+                    if (href === currentPage) {
+                        li.classList.add("active-li");
+                        activeFound = true;
+                    }
+
+                });
+
+                // Agar koi match na mile to Home active
+                if (!activeFound) {
+                    const homeItem = document.querySelector(
+                        '.hm-head-moto-nav-list a[data-page="index.html"]'
+                    )?.parentElement;
+
+                    if (homeItem) {
+                        homeItem.classList.add("active-li");
+                    }
+                }
+
+            })
+            .catch(error => console.error("Header Load Error:", error));
+
+
+
+        // global Footer
+
+
+        // GLOBAL FOOTER LOAD
+
+        fetch('../Footer/footer.html')
+
+            .then(response => response.text())
+
+            .then(data => {
+
+                document.getElementById(
+                    "global-footer"
+                ).innerHTML = data;
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Footer loading error",
+                    error
+                );
+
+            });
+
+    </script>
+</body>
+
+</html>

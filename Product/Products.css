@@ -1,0 +1,448 @@
+
+        /* BRAND RESET & CORE STYLING */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #fafafa;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* PREMIUM GLASSMORPHISM HEADER SYSTEM */
+        .hm-head-moto-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            z-index: 999;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.015);
+        }
+
+        .hm-head-moto-header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hm-head-moto-logo-area .hm-head-moto-brand-logo {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .hm-head-moto-nav-list {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .hm-head-moto-nav-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.25s ease;
+        }
+
+        .hm-head-moto-nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #1e1e1e;
+            transition: width 0.25s ease;
+        }
+
+        .hm-head-moto-nav-link:hover {
+            color: #1e1e1e;
+        }
+
+        .hm-head-moto-nav-link:hover::after {
+            width: 100%;
+        }
+
+        .hm-head-moto-nav-link.hm-head-moto-active {
+            color: #1e1e1e;
+        }
+
+        .hm-head-moto-nav-link.hm-head-moto-active::after {
+            width: 100%;
+            background-color: #d97706;
+        }
+
+        .hm-head-moto-header-utils {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hm-head-moto-utility-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            color: #1e1e1e;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .hm-head-moto-utility-link:hover {
+            background: #1e1e1e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .cart-svg-icon {
+            width: 18px;
+            height: 18px;
+            color: #1e1e1e;
+            transition: color 0.25s ease;
+        }
+
+        .hm-head-moto-utility-link:hover .cart-svg-icon {
+            color: #ffffff;
+        }
+
+        .header-cart-badge {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            background: #d97706;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 20px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35);
+            border: 2px solid #ffffff;
+        }
+
+        /* GRID SHOP WRAPPER */
+        .dochaki-shop-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .dochaki-category-bar {
+            padding-bottom: 20px;
+        }
+
+        .dochaki-shop-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dochaki-shop-title {
+            font-size: 32px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #1e1e1e;
+            letter-spacing: -0.5px;
+        }
+
+        .dochaki-shop-subtitle {
+            font-size: 14px;
+            color: #71717a;
+            margin-top: 6px;
+        }
+
+        /* GRID SYSTEM (80px Gap) */
+        .dochaki-grid-2col {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+        }
+
+        /* PRODUCT CARDS */
+        .dochaki-item-card {
+            background: #ffffff;
+            border: 1px solid #e4e4e7;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+        }
+
+        .dochaki-item-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .dochaki-media-box {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            background-color: #f4f4f5;
+            overflow: hidden;
+        }
+
+        .dochaki-item-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dochaki-tag {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        .dochaki-body-box {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background: #ffffff;
+        }
+
+        .dochaki-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #18181b;
+            height: 44px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .dochaki-price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .dochaki-selling-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e1e1e;
+        }
+
+        .dochaki-cut-price {
+            font-size: 14px;
+            color: #a1a1aa;
+            text-decoration: line-through;
+        }
+
+        .dochaki-action-btn {
+            margin-top: 18px;
+            width: 100%;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s ease;
+        }
+
+        .btn-buy {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #1e1e1e;
+        }
+
+        .btn-buy:hover {
+            background-color: #3f3f46;
+        }
+
+        .btn-direct-cart {
+            background-color: #d97706;
+            color: #ffffff;
+            border: 1px solid #d97706;
+        }
+
+        .btn-direct-cart:hover {
+            background-color: #b45309;
+        }
+
+        /* LIVE CART SLIDING DRAWER PANEL */
+        .cart-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+        }
+
+        .cart-drawer-panel {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            height: 100%;
+            background: #ffffff;
+            box-shadow: -6px 0 30px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-drawer-panel.open {
+            right: 0;
+        }
+
+        .cart-drawer-overlay.open {
+            display: block;
+        }
+
+        .cart-drawer-header {
+            padding: 20px;
+            background: #1e1e1e;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-drawer-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .cart-drawer-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .cart-live-item {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #f4f4f5;
+        }
+
+        .cart-live-img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #f4f4f5;
+        }
+
+        .cart-live-details {
+            flex-grow: 1;
+        }
+
+        .cart-live-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e1e1e;
+            margin-bottom: 4px;
+        }
+
+        .cart-live-price {
+            font-size: 13px;
+            color: #d97706;
+            font-weight: 700;
+        }
+
+        .cart-live-remove {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .cart-drawer-footer {
+            padding: 20px;
+            border-top: 1px solid #e4e4e7;
+            background: #fafafa;
+        }
+
+        .cart-total-bar {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .checkout-whatsapp-btn {
+            width: 100%;
+            padding: 14px;
+            background: #25d366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hm-head-moto-nav-list {
+                display: none;
+            }
+
+            .dochaki-grid-2col {
+                gap: 16px;
+            }
+
+            .cart-drawer-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }

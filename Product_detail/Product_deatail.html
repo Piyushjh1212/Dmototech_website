@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - DMotoTech By Dochaki</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* ==========================================================================
+        1. PREMIUM THEME RESET
+        ========================================================================== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #ffffff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #1e1e1e; }
+        
+        .dochaki-container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        
+        .breadcrumb { font-size: 13px; color: #757575; margin-bottom: 30px; font-weight: 500; }
+        .breadcrumb span { color: #1e1e1e; }
+
+        /* ==========================================================================
+        2. TWO COLUMN TOP HERO SECTION
+        ========================================================================== */
+        .product-hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 50px; margin-bottom: 60px; }
+        
+        /* Media Image Box */
+        .product-gallery { position: relative; width: 100%; padding-top: 100%; background: #f7f7f7; border-radius: 8px; overflow: hidden; }
+        .product-gallery img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Info Details Box */
+        .product-essential { display: flex; flex-direction: column; justify-content: flex-start; }
+        .product-title { font-size: 32px; font-weight: 700; line-height: 1.2; color: #222; margin-bottom: 12px; }
+        
+        .product-price-row { display: flex; align-items: baseline; gap: 12px; margin: 20px 0; }
+        .price-main { font-size: 28px; font-weight: 700; color: #7a9c14; }
+        .price-tax { font-size: 13px; color: #757575; font-weight: 400; }
+        
+        .short-description { font-size: 15px; color: #4a4a4a; line-height: 1.6; margin-bottom: 25px; }
+        
+        /* Options & Cart Box */
+        .product-configure-box { border-top: 1px solid #eaeaea; padding-top: 25px; margin-top: 20px; }
+        .option-row { display: flex; align-items: center; gap: 30px; margin-bottom: 20px; }
+        .option-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; width: 100px; }
+        
+        .selector-dropdown { padding: 10px 15px; font-size: 14px; border: 1px solid #ccc; width: 220px; background: #fff; cursor: pointer; outline: none; }
+        
+        .cart-action-row { display: flex; gap: 15px; margin-top: 30px; }
+        .qty-input { width: 50px; text-align: center; border: 1px solid #ccc; font-size: 15px; font-weight: 600; }
+        .btn-add-cart { background: #333333; color: #fff; border: none; padding: 15px 40px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background 0.2s; }
+        .btn-add-cart:hover { background: #000; }
+
+        .meta-info-block { margin-top: 30px; border-top: 1px solid #eaeaea; padding-top: 20px; font-size: 13px; color: #666; line-height: 1.8; }
+        .meta-info-block strong { color: #1e1e1e; }
+
+        /* ==========================================================================
+        3. E-COMMERCE TABS SYSTEM (Description, Info, Reviews)
+        ========================================================================== */
+        .tabs-wrapper { margin-top: 60px; border-top: 1px solid #eaeaea; }
+        .tabs-header { display: flex; gap: 40px; border-bottom: 1px solid #eaeaea; }
+        
+        .tab-trigger { padding: 20px 0; font-size: 18px; font-weight: 500; color: #999; cursor: pointer; position: relative; background: none; border: none; outline: none; }
+        .tab-trigger.active { color: #1e1e1e; font-weight: 600; }
+        .tab-trigger.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: #1e1e1e; }
+        
+        .tab-content-panel { display: none; padding: 40px 0; animation: fadeIn 0.3s ease; }
+        .tab-content-panel.active { display: block; }
+
+        /* Description Inner Content Styling */
+        .panel-html-content h2 { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: #222; }
+        .panel-html-content p { font-size: 15px; color: #4a4a4a; line-height: 1.7; margin-bottom: 20px; }
+        .panel-html-content ul { margin-left: 20px; margin-bottom: 30px; }
+        .panel-html-content li { font-size: 15px; color: #1e1e1e; line-height: 2; margin-bottom: 5px; }
+
+        .callout-box { background: #f9f9f9; padding: 15px 20px; font-size: 14px; color: #555; border-left: 3px solid #ccc; margin-bottom: 30px; font-family: monospace; }
+        .promo-footer-text { font-size: 15px; font-weight: 500; font-style: italic; margin-top: 40px; color: #333; }
+
+        /* Additional Info Table Layout */
+        .info-table { width: 100%; border-collapse: collapse; max-width: 600px; }
+        .info-table tr { border-bottom: 1px solid #eaeaea; }
+        .info-table td { padding: 12px 0; font-size: 14px; }
+        .info-table td.label-td { font-weight: 700; width: 180px; text-transform: uppercase; color: #555; font-size: 12px; letter-spacing: 0.5px; }
+
+        /* Review Section Styling */
+        .review-box { max-width: 700px; }
+        .review-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; outline: none; font-family: inherit; }
+        .btn-submit { background: #333; color: #fff; border: none; padding: 12px 30px; font-weight: 700; text-transform: uppercase; cursor: pointer; font-size: 13px; }
+
+        /* Rendered Reviews List Style */
+        .rendered-reviews { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .single-review { background: #fdfdfd; border: 1px solid #f0f0f0; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
+        .review-meta { display: flex; justify-content: space-between; font-size: 12px; color: #777; margin-bottom: 8px; }
+        .review-user { font-weight: 700; color: #333; }
+        .review-rating { color: #ffb400; font-weight: bold; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 768px) { .product-hero { grid-template-columns: 1fr; gap: 30px; } .tabs-header { gap: 20px; } .tab-trigger { font-size: 15px; } }
+    </style>
+</head>
+
+<body>
+
+    <div class="dochaki-container">
+        <div class="breadcrumb">
+            Home » Shop » <span id="layer-crumbs">Product Loading...</span>
+        </div>
+
+        <div class="product-hero">
+            <div class="product-gallery">
+                <img src="" alt="Product Image" id="target-img">
+            </div>
+            
+            <div class="product-essential">
+                <h1 class="product-title" id="target-title">Loading Product Specification...</h1>
+                
+                <div class="product-price-row">
+                    <span class="price-main" id="target-price">₹0</span>
+                    <span class="price-tax">(incl. Tax)</span>
+                </div>
+
+                <p class="short-description" id="target-short-desc">
+                    Protect your bike's swingarm and make paddock stand lifting easier with premium biking gear. Made from high-grade CNC-machined aluminum, they're lightweight, durable, and engineered for a perfect fit.
+                </p>
+
+                <div class="product-configure-box">
+                    <div class="option-row">
+                        <span class="option-label">Bolt Size</span>
+                        <select class="selector-dropdown" id="target-bolt-select">
+                            <option value="">Choose an option</option>
+                        </select>
+                    </div>
+
+                    <div class="cart-action-row">
+                        <input type="number" class="qty-input" value="1" min="1">
+                        <button class="btn-add-cart">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="meta-info-block">
+                    <div>SKU: <strong>N/A</strong></div>
+                    <div>Categories: <strong id="target-categories">Loading...</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs-wrapper">
+            <div class="tabs-header">
+                <button class="tab-trigger active" onclick="switchTab(event, 'tab-description')">Description</button>
+                <button class="tab-trigger" onclick="switchTab(event, 'tab-additional')">Additional information</button>
+                <button class="tab-trigger" id="reviews-tab-btn" onclick="switchTab(event, 'tab-reviews')">Reviews (0)</button>
+            </div>
+
+            <!-- Description Tab -->
+            <div id="tab-description" class="tab-content-panel active">
+                <div class="panel-html-content">
+                    <h2 id="tab-inner-title">Product Description Setup</h2>
+                    
+                    <div class="callout-box" id="target-callout">
+                        Spools comes in 3 different sizes (6mm, 8mm, 10mm)
+                    </div>
+
+                    <p>
+                        Protect your motorcycle and simplify maintenance with <strong>Dochaki Designs Premium Quality Gear</strong>. Designed for optimal performance, these products provide high stability, making chain cleaning, wheel removal, and garage parking effortless.
+                    </p>
+                    <p>
+                        Crafted with absolute precision, they ensure long-lasting performance under heavy usage. The premium finishing resists corrosion, scratches, and wear, keeping them looking premium even after heavy use.
+                    </p>
+                    
+                    <h2 style="font-size: 20px; margin-top: 30px;">Key Features</h2>
+                    <ul id="target-features-list">
+                        <!-- Dynamically filled -->
+                    </ul>
+
+                    <p class="promo-footer-text">For bike modification or customization visit to Dochaki Designs or contact us.</p>
+                </div>
+            </div>
+
+            <!-- Additional Info Tab -->
+            <div id="tab-additional" class="tab-content-panel">
+                <table class="info-table">
+                    <tr>
+                        <td class="label-td">Weight</td>
+                        <td style="color: #666;" id="table-weight">N/A</td>
+                    </tr>
+                    <tr>
+                        <td class="label-td">Dimensions</td>
+                        <td style="color: #666;" id="table-dimensions">N/A</td>
+                    </tr>
+                    <tr>
+                        <td class="label-td">Bolt Size</td>
+                        <td id="table-bolt-sizes" style="color: #222;">N/A</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Reviews Tab -->
+            <div id="tab-reviews" class="tab-content-panel">
+                <div class="review-box">
+                    <p class="review-title" id="review-header-text">There are no reviews yet.</p>
+                    
+                    <!-- Container jisme reviews database se aakar load honge -->
+                    <div id="reviews-container" class="rendered-reviews"></div>
+
+                    <!-- Review Form -->
+                    <div style="background: #fdfdfd; border: 1px solid #eaeaea; padding: 25px; border-radius: 6px;">
+                        <h4 style="margin-bottom: 15px; font-size: 15px;">Be the first to review this product</h4>
+                        
+                        <div class="form-group">
+                            <label>Your Name *</label>
+                            <input type="text" id="review-user-name" class="form-control" required placeholder="Enter your name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Your Rating *</label>
+                            <select class="selector-dropdown" style="width: 100%;" id="review-rating">
+                                <option value="">Rate...</option>
+                                <option value="5">5 - Perfect</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3">3 - Average</option>
+                                <option value="2">2 - Bad</option>
+                                <option value="1">1 - Terrible</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Your Review *</label>
+                            <textarea class="form-control" rows="5" id="review-comment" placeholder="Write your review here..."></textarea>
+                        </div>
+                        <button class="btn-submit" onclick="submitReview()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://ycipxljvymewdltlblvn.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function getParamId() {
+            return new URLSearchParams(window.location.search).get('id');
+        }
+
+        // TABS SWITCH ENGINE
+        function switchTab(event, panelId) {
+            document.querySelectorAll('.tab-content-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(panelId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // LOAD PRODUCT DETAILS & REVIEWS DYNAMICALLY
+        async function loadProductFullData() {
+            const pId = getParamId();
+            if(!pId) return;
+
+            try {
+                // 1. Fetch Product Data from Supabase
+                const { data: product, error: prodError } = await client
+                    .from('products')
+                    .select('*')
+                    .eq('id', pId)
+                    .single();
+
+                if(prodError) throw prodError;
+
+                // UI data mapping
+                document.getElementById('target-title').innerText = product.name;
+                document.getElementById('tab-inner-title').innerText = product.name;
+                document.getElementById('layer-crumbs').innerText = product.name;
+                document.getElementById('target-img').src = product.image_url;
+                document.getElementById('target-price').innerText = `₹${product.price}`;
+                
+                if(product.description) {
+                    document.getElementById('target-short-desc').innerText = product.description;
+                }
+
+                // Dynamic Bolt Size Setup
+                const selectDropdown = document.getElementById('target-bolt-select');
+                selectDropdown.innerHTML = '<option value="">Choose an option</option>';
+                if(product.bolt_sizes && product.bolt_sizes.length > 0) {
+                    product.bolt_sizes.forEach(size => {
+                        selectDropdown.innerHTML += `<option value="${size}">${size}</option>`;
+                    });
+                    document.getElementById('table-bolt-sizes').innerText = product.bolt_sizes.join(', ');
+                    document.getElementById('target-callout').innerText = `Available sizes: ${product.bolt_sizes.join(', ')}`;
+                } else {
+                    document.getElementById('target-callout').style.display = 'none';
+                }
+
+                // Dynamic Categories Setup
+                if(product.categories && product.categories.length > 0) {
+                    document.getElementById('target-categories').innerText = product.categories.join(', ');
+                }
+
+                // Specs Table Setup
+                document.getElementById('table-weight').innerText = product.weight || 'N/A';
+                document.getElementById('table-dimensions').innerText = product.dimensions || 'N/A';
+
+                // Key Features Setup (JSONB Parsing)
+                const featuresUl = document.getElementById('target-features-list');
+                featuresUl.innerHTML = '';
+                if(product.key_features && Array.isArray(product.key_features)) {
+                    product.key_features.forEach(feat => {
+                        featuresUl.innerHTML += `<li>${feat}</li>`;
+                    });
+                }
+
+                // 2. Fetch Particular Product Reviews
+                const { data: reviews, error: revError } = await client
+                    .from('reviews')
+                    .select('*')
+                    .eq('product_id', pId)
+                    .order('created_at', { ascending: false });
+
+                if(revError) throw revError;
+
+                const reviewsContainer = document.getElementById('reviews-container');
+                const reviewsTabBtn = document.getElementById('reviews-tab-btn');
+                
+                if(reviews && reviews.length > 0) {
+                    reviewsTabBtn.innerText = `Reviews (${reviews.length})`;
+                    document.getElementById('review-header-text').innerText = `Customer Reviews (${reviews.length})`;
+                    
+                    reviewsContainer.innerHTML = '';
+                    reviews.forEach(rev => {
+                        let stars = '⭐'.repeat(rev.rating || 5);
+                        reviewsContainer.innerHTML += `
+                            <div class="single-review">
+                                <div class="review-meta">
+                                    <span class="review-user">${rev.user_name || 'Anonymous'}</span>
+                                    <span class="review-rating">${stars}</span>
+                                </div>
+                                <p style="font-size: 14px; color: #4a4a4a;">${rev.comment || ''}</p>
+                            </div>
+                        `;
+                    });
+                }
+
+            } catch (err) {
+                console.error("Data loading failed: ", err.message);
+            }
+        }
+
+        // SUBMIT REVIEW LOGIC
+        async function submitReview() {
+            const pId = getParamId();
+            const userName = document.getElementById('review-user-name').value.trim();
+            const rating = document.getElementById('review-rating').value;
+            const comment = document.getElementById('review-comment').value.trim();
+
+            if(!pId) return;
+            if(!userName || !rating || !comment) {
+                alert("Please fill all fields and provide a rating.");
+                return;
+            }
+
+            try {
+                const { data, error } = await client
+                    .from('reviews')
+                    .insert([
+                        {
+                            product_id: pId,
+                            user_name: userName,
+                            rating: parseInt(rating),
+                            comment: comment
+                        }
+                    ]);
+
+                if(error) throw error;
+
+                alert("Thank you! Your review has been submitted successfully.");
+                
+                // Fields Reset aur Refresh
+                document.getElementById('review-user-name').value = '';
+                document.getElementById('review-rating').value = '';
+                document.getElementById('review-comment').value = '';
+                
+                loadProductFullData(); // Live reload content
+
+            } catch (err) {
+                alert("Error submitting review: " + err.message);
+            }
+        }
+
+        window.onload = loadProductFullData;
+    </script>
+</body>
+</html>

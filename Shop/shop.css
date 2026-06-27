@@ -1,0 +1,281 @@
+
+        /* ==========================================================================
+        1. GLOBAL RESET
+        ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #fafafa;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==========================================================================
+        2. MAIN CENTERED CONTAINER
+        ========================================================================== */
+        .dochaki-shop-wrapper {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .dochaki-shop-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dochaki-shop-title {
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #1e1e1e;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .dochaki-shop-subtitle {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        /* Dynamic Nav Bar Styles */
+        .dochaki-category-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 5px 25px 5px;
+            scrollbar-width: none;
+            align-items: center;
+        }
+
+        .dochaki-category-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            background: #ffffff;
+            color: #1e1e1e;
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            background: #1e1e1e;
+            color: #ffffff;
+            border-color: #1e1e1e;
+        }
+
+        /* Special Back Tab Button */
+        .back-tab {
+            background: #e2e8f0;
+            color: #1e1e1e;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* ==========================================================================
+        3. STRICT 2-COLUMN GRID (80px gap layout safe)
+        ========================================================================== */
+        .dochaki-grid-2col {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 80px;
+        }
+
+        /* ==========================================================================
+        4. PRODUCT CARD DESIGN
+        ========================================================================== */
+        .dochaki-item-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 0 !important;
+            margin: 0 !important;
+            transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.25s ease;
+            cursor: pointer;
+        }
+
+        .dochaki-item-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .dochaki-item-card.hidden {
+            display: none !important;
+        }
+
+        /* ==========================================================================
+        5. PERFECT SQUARE IMAGE BOX
+        ========================================================================== */
+        .dochaki-media-box {
+            position: relative;
+            width: 100% !important;
+            padding-top: 100% !important;
+            background-color: #f1f5f9;
+            overflow: hidden;
+            margin: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .dochaki-item-img {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            transition: transform 0.4s ease;
+        }
+
+        .dochaki-item-card:hover .dochaki-item-img {
+            transform: scale(1.04);
+        }
+
+        /* ==========================================================================
+        6. OVERLAY BRAND BADGE
+        ========================================================================== */
+        .dochaki-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            z-index: 10;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==========================================================================
+        7. TEXT & PRICE BLOCK
+        ========================================================================== */
+        .dochaki-body-box {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background: #ffffff;
+        }
+
+        .dochaki-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #1e1e1e;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 42px;
+        }
+
+        /* Price wrapper setup */
+        .dochaki-price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .dochaki-selling-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e1e1e;
+        }
+
+        .dochaki-cut-price {
+            font-size: 13px;
+            color: #a0aec0;
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        /* Dynamic Button Styles */
+        .dochaki-action-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s ease;
+        }
+
+        .btn-buy {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #1e1e1e;
+        }
+
+        .btn-buy:hover {
+            background-color: #3a3a3a;
+        }
+
+        .btn-select {
+            background-color: #ffffff;
+            color: #1e1e1e;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-select:hover {
+            background-color: #f8fafc;
+        }
+
+        #loading-state {
+            text-align: center;
+            font-size: 16px;
+            color: #757575;
+            padding: 40px;
+        }
+
+        /* ==========================================================================
+        8. MOBILE VIEW ADJUSTMENTS
+        ========================================================================== */
+        @media (max-width: 480px) {
+            .dochaki-grid-2col {
+                gap: 12px;
+            }
+
+            .dochaki-body-box {
+                padding: 12px;
+            }
+
+            .dochaki-item-title {
+                font-size: 14px;
+            }
+
+            .dochaki-tag {
+                top: 10px;
+                left: 10px;
+                padding: 3px 8px;
+                font-size: 9px;
+            }
+
+            .dochaki-action-btn {
+                font-size: 11px;
+                padding: 8px;
+            }
+        }

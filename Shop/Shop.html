@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dochaki Premium Grid Shop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./shop.css">
+    <link rel="stylesheet" href="../Header/header.css">
+    <link rel="stylesheet" href="../Footer/footer.css">
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="Shop.js"></script>
+    <script src="../Header/header.js"></script>
+
+
+</head>
+
+<body>
+    <div id="global-header"></div>
+    <section class="dochaki-shop-wrapper">
+        <div class="dochaki-shop-header">
+            <h1 class="dochaki-shop-title" id="main-shop-title">Premium Biking Gear</h1>
+            <p class="dochaki-shop-subtitle" id="product-count">Loading premium categories...</p>
+        </div>
+
+        <div class="dochaki-category-bar" id="category-tabs-container"></div>
+
+        <div id="loading-state">Syncing live categories from database...</div>
+
+        <div class="dochaki-grid-2col" id="product-grid"></div>
+    </section>
+
+    <!-- Footer sectio here  -->
+
+    <div id="global-footer"></div>
+
+    <script>
+        fetch('../Header/header.html')
+            .then(response => response.text())
+            .then(data => {
+
+                // Header inject karo
+                document.getElementById('global-header').innerHTML = data;
+
+                // Header load hone ke baad cart sync karo
+                if (typeof forceSyncHomeCart === "function") {
+                    forceSyncHomeCart();
+                }
+
+                // Current page
+                const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+
+                // Sab active remove karo
+                const menuItems = document.querySelectorAll(".hm-head-moto-nav-list li");
+                menuItems.forEach(li => li.classList.remove("active-li"));
+
+                let activeFound = false;
+
+                // Current page active karo
+                menuItems.forEach(li => {
+
+                    const link = li.querySelector("a");
+                    if (!link) return;
+
+                    // href ka sirf filename lo
+                    const href = link.getAttribute("href").split("/").pop().toLowerCase();
+
+                    if (href === currentPage) {
+                        li.classList.add("active-li");
+                        activeFound = true;
+                    }
+
+                });
+
+                // Agar koi match na mile to Home active
+                if (!activeFound) {
+                    const homeItem = document.querySelector(
+                        '.hm-head-moto-nav-list a[data-page="index.html"]'
+                    )?.parentElement;
+
+                    if (homeItem) {
+                        homeItem.classList.add("active-li");
+                    }
+                }
+
+            })
+            .catch(error => console.error("Header Load Error:", error));
+
+        // global Footer
+
+
+        // GLOBAL FOOTER LOAD
+
+        fetch('../Footer/footer.html')
+
+            .then(response => response.text())
+
+            .then(data => {
+
+                document.getElementById(
+                    "global-footer"
+                ).innerHTML = data;
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Footer loading error",
+                    error
+                );
+
+            });
+    </script>
+</body>
+
+</html>

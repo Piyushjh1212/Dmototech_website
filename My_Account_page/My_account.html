@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Account | DMotoTech Official</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. RESET & CORE GLOBAL STYLE
+           ========================================================================== */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #f8fafc; color: #0f172a;
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        /* Standard Website Navbar Header */
+        .web-header {
+            background: #ffffff; border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px; display: flex; justify-content: space-between;
+            align-items: center; position: sticky; top: 0; z-index: 100;
+        }
+        .brand-logo img { height: 36px; object-fit: contain; }
+        .home-btn {
+            text-decoration: none; color: #475569; font-size: 13px;
+            font-weight: 700; background: #f1f5f9; padding: 8px 16px; border-radius: 20px;
+        }
+
+        /* Account Shell Container */
+        .account-wrapper {
+            max-width: 1100px; width: 100%; margin: 0 auto; padding: 16px;
+            flex-grow: 1; display: flex; flex-direction: column; gap: 16px;
+        }
+
+        /* Top Identity Banner */
+        .user-hero-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
+            padding: 20px; display: flex; align-items: center; gap: 14px;
+        }
+        .user-avatar {
+            width: 48px; height: 48px; background: #0f172a; color: #ffffff;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 800;
+        }
+        .user-meta h3 { font-size: 16px; font-weight: 800; color: #0f172a; }
+        .user-meta p { font-size: 12px; color: #64748b; }
+
+        /* ==========================================================================
+           2. MOBILE-FIRST NAVIGATION LIST (Default Screen for Phone)
+           ========================================================================== */
+        .mobile-menu-list {
+            display: flex; flex-direction: column; gap: 2px;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
+            overflow: hidden; padding: 8px 0;
+        }
+        .menu-list-item {
+            width: 100%; padding: 16px 20px; background: none; border: none;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .menu-list-item:active { background: #f8fafc; }
+        .menu-item-left { display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 600; color: #334155; }
+        .menu-item-left i { font-size: 16px; color: #64748b; width: 20px; text-align: center; }
+        .chevron-right { color: #cbd5e1; font-size: 12px; }
+        .menu-logout { color: #ef4444 !important; }
+        .menu-logout i { color: #ef4444 !important; }
+
+        /* Mobile View Back Navigation trigger link */
+        .mobile-back-trigger {
+            display: none; align-items: center; gap: 8px; font-size: 13px;
+            font-weight: 700; color: #0f172a; cursor: pointer; background: #ffffff;
+            padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 12px;
+            width: fit-content; margin-bottom: 12px;
+        }
+
+        /* ==========================================================================
+           3. DATA WINDOW PANELS CONTENT STYLES
+           ========================================================================== */
+        .content-panel-box {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
+            padding: 20px; display: none; /* Controlled via script dynamically */
+        }
+        /* Mobile Active state handler */
+        .content-panel-box.mobile-active { display: block; }
+
+        .panel-heading { margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
+        .panel-heading h2 { font-size: 18px; font-weight: 800; color: #0f172a; }
+        .panel-heading p { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+        /* Orders Subsystem Card Stack */
+        .order-history-stack { display: flex; flex-direction: column; gap: 12px; }
+        .web-order-card {
+            border: 1px solid #e2e8f0; border-radius: 14px; background: #ffffff; overflow: hidden;
+        }
+        .woc-header {
+            background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; font-size: 11px; color: #64748b;
+        }
+        .woc-header span { font-weight: 700; color: #0f172a; }
+        .woc-body { padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .woc-img-desc { display: flex; gap: 12px; align-items: center; }
+        .woc-img-desc img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .woc-img-desc h4 { font-size: 13px; font-weight: 700; color: #0f172a; }
+        .woc-img-desc p { font-size: 11px; color: #64748b; margin-top: 1px; }
+        .status-tag { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #dcfce7; color: #16a34a; }
+
+        /* Forms Layout */
+        .web-form-layout { display: flex; flex-direction: column; gap: 16px; }
+        .web-field { display: flex; flex-direction: column; gap: 6px; }
+        .web-field label { font-size: 12px; font-weight: 700; color: #475569; }
+        .web-field input {
+            padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;
+            font-size: 14px; color: #0f172a; outline: none; background: #ffffff;
+        }
+        .web-field input:focus { border-color: #0f172a; }
+        .submit-web-btn {
+            padding: 14px; background: #0f172a; color: #ffffff; border: none;
+            border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center;
+        }
+
+        /* Address Nodes */
+        .address-box-grid { display: flex; flex-direction: column; gap: 12px; }
+        .address-card-node { border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; position: relative; }
+        .addr-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; background: #f1f5f9; border-radius: 4px; float: right; color: #475569; }
+        .address-card-node h4 { font-size: 14px; font-weight: 700; }
+        .address-card-node p { font-size: 13px; color: #64748b; line-height: 1.5; padding-top: 6px; clear: both; }
+
+        /* ==========================================================================
+           4. LARGE SCREEN OVERRIDES (Desktop Clean Split Web Frame)
+           ========================================================================== */
+        @media (min-width: 850px) {
+            .account-wrapper {
+                grid-template-columns: 260px 1fr; display: grid; gap: 32px; margin: 40px auto;
+            }
+            /* Hide the Mobile Back option on Desktop */
+            .mobile-back-trigger { display: none !important; }
+            
+            /* Convert menu list back into a standard fixed sidebar on PC */
+            .mobile-menu-list { display: flex !important; border-radius: 16px; padding: 12px 0; gap: 4px; }
+            .menu-list-item { padding: 12px 20px; border-radius: 8px; width: 90%; margin: 0 auto; }
+            .menu-list-item:hover { background: #f1f5f9; }
+            .menu-list-item.desktop-active { background: #0f172a; }
+            .menu-list-item.desktop-active .menu-item-left { color: #ffffff; }
+            .menu-list-item.desktop-active .menu-item-left i { color: #ffffff; }
+            .chevron-right { display: none; } /* Hide arrow icon on PC */
+            
+            .menu-logout { border-top: 1px dashed #e2e8f0; padding-top: 16px; margin-top: 8px; width: 100%; border-radius: 0; }
+            .menu-logout:hover { background: #fef2f2; }
+
+            /* Desktop Content Area layout handling */
+            .content-panel-box { display: none; padding: 32px; }
+            .content-panel-box.desktop-active { display: block; }
+            
+            .panel-heading h2 { font-size: 22px; }
+            .web-form-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            .form-row-full { grid-column: span 2; }
+            .submit-web-btn { width: fit-content; padding: 12px 28px; }
+            .address-box-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BRAND TOP NAVBAR -->
+    <header class="web-header">
+        <div class="brand-logo">
+            <img src="https://res.cloudinary.com/dhrqbdrkh/image/upload/v1782471800/dmotottech_awtowl.png" alt="DMotoTech Logo">
+        </div>
+        <a href="./index.html" class="home-btn">Shop Home</a>
+    </header>
+
+    <!-- MAIN INTERFACE -->
+    <main class="account-wrapper">
+        
+        <!-- CORE CONTROLLER NODE (User Identity + List Block) -->
+        <div style="display: flex; flex-direction: column; gap: 16px;" id="sidebar-navigation-hub">
+            <div class="user-hero-card">
+                <div class="user-avatar">PJ</div>
+                <div class="user-meta">
+                    <h3>Piyush Jhariya</h3>
+                    <p>Verified Rider</p>
+                </div>
+            </div>
+
+            <!-- THE SIMPLE MOBILE MENU LIST VIEW -->
+            <nav class="mobile-menu-list">
+                <button class="menu-list-item desktop-active" onclick="routeToAccountSection('orders', this)">
+                    <span class="menu-item-left"><i class="fa-solid fa-box"></i> My Orders</span>
+                    <i class="fa-solid fa-chevron-right chevron-right"></i>
+                </button>
+                <button class="menu-list-item" onclick="routeToAccountSection('profile', this)">
+                    <span class="menu-item-left"><i class="fa-solid fa-user"></i> Profile Settings</span>
+                    <i class="fa-solid fa-chevron-right chevron-right"></i>
+                </button>
+                <button class="menu-list-item" onclick="routeToAccountSection('address', this)">
+                    <span class="menu-item-left"><i class="fa-solid fa-map-pin"></i> Saved Addresses</span>
+                    <i class="fa-solid fa-chevron-right chevron-right"></i>
+                </button>
+                <button class="menu-list-item menu-logout" onclick="handleLogoutSystem()">
+                    <span class="menu-item-left"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</span>
+                    <i class="fa-solid fa-chevron-right chevron-right"></i>
+                </button>
+            </nav>
+        </div>
+
+        <!-- TARGET BLOCKS AREA -->
+        <div style="width: 100%;">
+            
+            <!-- Dynamic Mobile Back Button Trigger Link -->
+            <div class="mobile-back-trigger" id="mobileBackBtn" onclick="returnBackToMenuList()">
+                <i class="fa-solid fa-arrow-left"></i> Back to Account Menu
+            </div>
+
+            <!-- SECTION 1: ORDERS CORES -->
+            <div class="content-panel-box desktop-active" id="sect-orders">
+                <div class="panel-heading">
+                    <h2>Your Orders</h2>
+                    <p>Review and track all your historical and live purchases.</p>
+                </div>
+                <div class="order-history-stack">
+                    <div class="web-order-card">
+                        <div class="woc-header">
+                            <div>Order <span>#DMT-98432</span></div>
+                            <div>Placed: <span>June 12, 2026</span></div>
+                            <div>Total: <span>₹14,500</span></div>
+                        </div>
+                        <div class="woc-body">
+                            <div class="woc-img-desc">
+                                <img src="https://dmototech.co.in/wp-content/uploads/2026/01/G-310-GS.webp" alt="Thumb">
+                                <div>
+                                    <h4>BMW G-310-GS Crash Guard</h4>
+                                    <p>Qty: 1 • Premium Black Edition</p>
+                                </div>
+                            </div>
+                            <span class="status-tag">Delivered</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: PROFILE PROFILE SETTINGS -->
+            <div class="content-panel-box" id="sect-profile">
+                <div class="panel-heading">
+                    <h2>Profile Settings</h2>
+                    <p>Update your personal account credentials securely.</p>
+                </div>
+                <form class="web-form-layout" onsubmit="event.preventDefault(); alert('Profile Saved!');">
+                    <div class="web-field"><label>Full Name</label><input type="text" value="Piyush Jhariya"></div>
+                    <div class="web-field"><label>Email Address</label><input type="email" value="piyush@example.com"></div>
+                    <div class="web-field"><label>Phone Number</label><input type="tel" value="+91 9999999999"></div>
+                    <div class="form-row-full"><button type="submit" class="submit-web-btn">Save Configurations</button></div>
+                </form>
+            </div>
+
+            <!-- SECTION 3: ADDRESSES CORES -->
+            <div class="content-panel-box" id="sect-address">
+                <div class="panel-heading">
+                    <h2>Saved Addresses</h2>
+                    <p>Manage your delivery terminals and shipping records.</p>
+                </div>
+                <div class="address-box-grid">
+                    <div class="address-card-node">
+                        <span class="addr-tag">Home</span>
+                        <h4>Piyush Jhariya</h4>
+                        <p>Plot No. 42, Sector-C,<br>Arera Colony, Near Hanuman Temple,<br>Bhopal, MP - 462016</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- CORE DRILL INTERACTION CONTROLLER SCRIPT -->
+    <script>
+        let currentActiveSection = 'orders';
+
+        function routeToAccountSection(sectionId, clickedButton) {
+            currentActiveSection = sectionId;
+            const isMobile = window.innerWidth < 850;
+
+            // Clear all structural layout classes across desktop
+            document.querySelectorAll('.content-panel-box').forEach(box => {
+                box.classList.remove('desktop-active', 'mobile-active');
+            });
+            document.querySelectorAll('.menu-list-item').forEach(btn => btn.classList.remove('desktop-active'));
+
+            if (isMobile) {
+                // Mobile View Rule: Hide the List Navigation Menu completely
+                document.getElementById('sidebar-navigation-hub').style.display = 'none';
+                // Show Back Button Link bar
+                document.getElementById('mobileBackBtn').style.display = 'flex';
+                // Inject mobile content viewport layout
+                document.getElementById(`sect-${sectionId}`).classList.add('mobile-active');
+            } else {
+                // Desktop Rule: Highlight sidebar selection seamlessly
+                clickedButton.classList.add('desktop-active');
+                document.getElementById(`sect-${sectionId}`).classList.add('desktop-active');
+            }
+        }
+
+        function returnBackToMenuList() {
+            // Restore Mobile UI Hub setup states
+            document.getElementById('sidebar-navigation-hub').style.display = 'flex';
+            document.getElementById('mobileBackBtn').style.display = 'none';
+            
+            // Hide the opened child panel
+            document.getElementById(`sect-${currentActiveSection}`).classList.remove('mobile-active');
+        }
+
+        // Window resize event handler to clean responsive switching anomalies
+        window.addEventListener('resize', () => {
+            const isMobile = window.innerWidth < 850;
+            if (!isMobile) {
+                document.getElementById('sidebar-navigation-hub').style.display = 'flex';
+                document.getElementById('mobileBackBtn').style.display = 'none';
+                
+                document.querySelectorAll('.content-panel-box').forEach(box => {
+                    box.classList.remove('mobile-active');
+                    if(box.id === `sect-${currentActiveSection}`) box.classList.add('desktop-active');
+                });
+            } else {
+                // Reset to default menu view states on sudden mobile rotation
+                document.querySelectorAll('.content-panel-box').forEach(box => box.classList.remove('desktop-active'));
+                returnBackToMenuList();
+            }
+        });
+
+        function handleLogoutSystem() {
+            if(confirm("Confirm safe checkout and exit?")) {
+                window.location.href = "./index.html";
+            }
+        }
+    </script>
+</body>
+</html>
