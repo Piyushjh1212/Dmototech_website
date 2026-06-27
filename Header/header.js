@@ -115,3 +115,44 @@
   
 
         
+
+
+
+        // ================================
+// MOBILE NAVIGATION
+// ================================
+
+function toggleMobileNav() {
+
+    const panel = document.getElementById("mobileNavPanel");
+    const overlay = document.getElementById("mobileNavOverlay");
+
+    panel.classList.add("open");
+    overlay.classList.add("open");
+
+    document.body.style.overflow = "hidden";
+
+}
+
+function closeMobileNav() {
+
+    const panel = document.getElementById("mobileNavPanel");
+    const overlay = document.getElementById("mobileNavOverlay");
+
+    panel.classList.remove("open");
+    overlay.classList.remove("open");
+
+    document.body.style.overflow = "";
+
+}
+
+// ESC Key Support
+document.addEventListener("keydown", function (e) {
+
+    if (e.key === "Escape") {
+
+        closeMobileNav();
+
+    }
+
+});
