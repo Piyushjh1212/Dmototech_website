@@ -96,21 +96,17 @@
     </main>
 
     <script>
-        // Variables ko sabse upar rakha hai taaki Supabase crash ho tab bhi ye load ho sakein
         let selectedPaymentMethod = 'online';
         let calculatedCartTotal = 0;
         let checkoutSupabase = null;
 
-        // ======= SAFE INITIALIZATION SYSTEM =======
         const CHECKOUT_URL = "https://ycipxljvymewdltlblvn.supabase.co";
         const CHECKOUT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
 
         try {
-            // Agar URL valid hai tabhi client banega, warna catch block sambhal lega
             if (CHECKOUT_URL && CHECKOUT_URL.startsWith('http')) {
                 checkoutSupabase = window.supabase.createClient(CHECKOUT_URL, CHECKOUT_KEY);
             } else if (typeof window.supabase !== 'undefined' && window.supabase.auth) {
-                // Agar upar placeholder hai toh header.js ka global instance utha lo
                 checkoutSupabase = window.supabase;
             }
         } catch (e) {
@@ -152,7 +148,6 @@
             document.getElementById('finalTotalCost').innerText = '₹' + calculatedCartTotal.toLocaleString('en-IN');
         }
 
-        // Yeh functions ab har haal me chalenge bina kisi initialization error ke!
         function selectPaymentRoute(method, element) {
             selectedPaymentMethod = method;
 
@@ -168,9 +163,8 @@
         }
 
         async function executeSelectedOrderPayment() {
-            // Fallback checking agar initialization fail hui ho
             if (!checkoutSupabase) {
-                alert("⚠️ Configuration Missing: Please insert your valid Supabase HTTP/HTTPS URL and Key inside the code at line 116.");
+                alert("⚠️ Configuration Missing: Please insert your valid Supabase HTTP/HTTPS URL and Key inside the code.");
                 return;
             }
 
@@ -200,11 +194,7 @@
                     console.error("Supabase Insertion Error:", error);
                     alert("Order processed but database sync failed: " + error.message);
                 } else {
-                    if (selectedPaymentMethod === 'online') {
-                        alert(`🎉 Payment Successful!\nOrder successfully saved to profile.`);
-                    } else {
-                        alert("🎉 Order Confirmed via Cash on Delivery (COD)!\nThank you for shopping with DMotoTech.");
-                    }
+                    // Success alert poori tarah hata diya hai -> direct clean jump
                     flushCartAndClose();
                 }
             }
@@ -235,7 +225,8 @@
 
         function flushCartAndClose() {
             localStorage.removeItem('dochaki_cart');
-            window.location.href = "../index.html";
+            // Direct thonkyou page ka redirect path set kar diya hai
+            window.location.href = "../ThankyouPage/Thankyou_page.html";
         }
 
         window.addEventListener('DOMContentLoaded', renderCheckoutOverview);

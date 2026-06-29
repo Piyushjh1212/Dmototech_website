@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You For Your Order | DMotoTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../header.css">
+    <link rel="stylesheet" href="../footer.css">
+    <link rel="stylesheet" href="./ThankyouPage.css">
+
+</head>
+
+<body>
+
+    <div id="global-header"></div>
+
+    <div class="ty-container">
+        <div class="ty-card">
+
+            <div class="ty-success-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <h1 class="ty-title">
+                Thank You for Your Order!
+            </h1>
+
+            <p class="ty-description">
+                Your payment and order details have been successfully processed.
+                We have received your order and our team is already getting it
+                ready for shipment.
+            </p>
+
+            <div class="ty-order-box">
+                <i class="fa-solid fa-truck-fast"></i>
+                Updates will be sent to your registered profile/email.
+            </div>
+
+            <div class="ty-btn-group">
+                <a href="../Shop/Shop.html" class="ty-btn ty-primary-btn">
+                    Continue Shopping
+                </a>
+
+                <a href="../My_Account_page/MyAccount_Section/My_Order.html" class="ty-btn ty-secondary-btn">
+                    View My Orders
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!-- Footer sectio here  -->
+
+    <div id="global-footer"></div>
+
+
+    <script>
+        async function loadHeader() {
+
+            try {
+
+                // Header Load
+                const response = await fetch("../Header/header.html");
+                const data = await response.text();
+
+                document.getElementById("global-header").innerHTML = data;
+
+                // Header inject hone do
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // Supabase Auth Initialize
+                if (typeof initSupabase === "function") {
+                    await initSupabase();
+                }
+
+                // Cart Sync
+                if (typeof forceSyncHomeCart === "function") {
+                    forceSyncHomeCart();
+                }
+
+                // ==========================
+                // ACTIVE MENU
+                // ==========================
+
+                let currentPage = window.location.pathname
+                    .split("/")
+                    .pop()
+                    .toLowerCase();
+
+                if (currentPage === "") {
+                    currentPage = "index.html";
+                }
+
+                const menuItems = document.querySelectorAll(".hm-head-moto-nav-list li");
+
+                menuItems.forEach(li => li.classList.remove("active-li"));
+
+                menuItems.forEach(li => {
+
+                    const link = li.querySelector("a");
+
+                    if (!link) return;
+
+                    const fileName = link
+                        .getAttribute("href")
+                        .split("/")
+                        .pop()
+                        .toLowerCase();
+
+                    if (fileName === currentPage) {
+                        li.classList.add("active-li");
+                    }
+
+                });
+
+            }
+            catch (err) {
+
+                console.error("Header Load Error:", err);
+
+            }
+
+        }
+
+        async function loadFooter() {
+
+            try {
+
+                const response = await fetch("../Footer/footer.html");
+
+                const data = await response.text();
+
+                document.getElementById("global-footer").innerHTML = data;
+
+            }
+            catch (err) {
+
+                console.error("Footer Load Error:", err);
+
+            }
+
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+
+            await loadHeader();
+
+            await loadFooter();
+
+        });
+    </script>
+
+</body>
+
+</html>

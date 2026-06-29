@@ -1,0 +1,245 @@
+/* ===============================
+   THANK YOU PAGE
+==================================*/
+
+.ty-container{
+
+    width:100%;
+
+    min-height:80vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px 15px;
+
+}
+
+
+
+.ty-card{
+
+    width:100%;
+
+    max-width:480px;
+
+    background:#ffffff;
+
+    padding:35px 30px;
+
+    border-radius:20px;
+
+    text-align:center;
+
+    border:1px solid #e5e7eb;
+
+    box-shadow:0 15px 35px rgba(0,0,0,0.08);
+
+}
+
+
+
+/* SUCCESS ICON */
+
+.ty-success-icon{
+
+    width:65px;
+
+    height:65px;
+
+    margin:0 auto 18px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:50%;
+
+    background:#dcfce7;
+
+    color:#22c55e;
+
+    font-size:30px;
+
+}
+
+
+
+/* TITLE */
+
+.ty-title{
+
+    font-size:25px;
+
+    font-weight:700;
+
+    color:#111827;
+
+    margin-bottom:10px;
+
+}
+
+
+
+/* DESCRIPTION */
+
+.ty-description{
+
+    color:#64748b;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    margin-bottom:22px;
+
+}
+
+
+
+/* ORDER INFO */
+
+.ty-order-box{
+
+
+
+    padding:12px;
+
+    border-radius:12px;
+
+    font-size:13px;
+
+    color:#475569;
+
+    margin-bottom:22px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+
+
+/* BUTTON AREA */
+
+.ty-btn-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+
+/* BUTTON */
+
+.ty-btn{
+
+    width:300px;
+
+    padding:13px 20px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    text-align:center;
+
+    transition:.25s;
+
+}
+
+
+
+/* PRIMARY */
+
+.ty-primary-btn{
+
+    background:#111827;
+
+    color:#ffffff;
+
+}
+
+
+
+.ty-primary-btn:hover{
+
+    background:#000000;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+/* SECONDARY */
+
+.ty-secondary-btn{
+
+    background:#ffffff;
+
+    border:1px solid #d1d5db;
+
+    color:#111827;
+
+}
+
+
+
+.ty-secondary-btn:hover{
+
+    background:#f8fafc;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+
+    .ty-card{
+
+        padding:28px 20px;
+
+    }
+
+
+    .ty-title{
+
+        font-size:22px;
+
+    }
+
+
+    .ty-btn{
+
+        width:200px;
+
+    }
+
+
+}
