@@ -1,7 +1,6 @@
-
-  *{
-      list-style: none;
-  }
+* {
+    list-style: none;
+}
 /* ==========================================================================
    2. CUSTOM HEADER & BRAND NAVIGATION STYLES (LIGHT MODE)
    ========================================================================== */
@@ -78,7 +77,6 @@
 }
 
 /* Underline */
-
 .hm-head-moto-nav-list li::after{
     content:"";
     position:absolute;
@@ -90,10 +88,7 @@
     transition:width .3s ease;
 }
 
-/* =========================
-   Active Page
-========================= */
-
+/* Active Page */
 .hm-head-moto-nav-list li.active-li::after{
     width:100%;
 }
@@ -102,11 +97,7 @@
     color:#e11d48;
 }
 
-/* =========================
-   Hover Effect
-========================= */
-
-/* Hover hone par active underline aur color hide ho jayega */
+/* Hover Effect */
 .hm-head-moto-nav-list:hover li.active-li::after{
     width:0;
 }
@@ -115,18 +106,12 @@
     color:#18181b;
 }
 
-/* Jis item par hover ho usi par underline aaye */
 .hm-head-moto-nav-list li:hover::after{
     width:100%;
 }
 
 .hm-head-moto-nav-list li:hover a{
     color:#e11d48;
-}
-.hm-head-moto-header-utils {
-    display: flex;
-    align-items: center;
-    gap: 16px;
 }
 
 .hm-head-moto-utility-link {
@@ -195,6 +180,7 @@
 .hm-mobile-nav-panel.open{
     left:0;
 }
+
 .hm-mobile-nav-header {
     padding: 20px;
     border-bottom: 1px solid #e4e4e7;
@@ -271,7 +257,7 @@
 }
 
 .cart-drawer-content {
-    flex-grow: 1; padding: 20px; overflow-y: auto;                  
+    flex-grow: 1; padding: 20px; overflow-y: auto;                                  
     display: flex; flex-direction: column; gap: 12px; background: #fafafa;               
 }
 
@@ -296,24 +282,6 @@
     cursor: pointer; box-shadow: 0 4px 12px rgba(24, 24, 27, 0.12);
 }
 
-/* ==========================================================================
-   5. RESPONSIVE MEDIA VIEWPORTS (BREAKPOINTS)
-   ========================================================================== */
-@media (max-width: 768px) {
-    .hm-head-moto-navbar {
-        display: none; /* Desktop menu hidden */
-    }
-    .hm-mobile-menu-toggle {
-        display: flex; /* Hamburger Icon Visible */
-    }
-    .cart-drawer-panel {
-        width: 100%; /* Mobile par Full screen cart */
-        right: -100%;
-    }
-}
-
-
-
 /* --- PAYMENT METHOD MODAL SYSTEM --- */
 .payment-modal-overlay {
     position: fixed;
@@ -321,7 +289,7 @@
     width: 100vw; height: 100vh;
     background: rgba(24, 24, 27, 0.4);
     backdrop-filter: blur(6px);
-    z-index: 100000; /* Cart drawer se bhi upar rahega */
+    z-index: 100000;
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -368,7 +336,6 @@
 
 .payment-modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
 
-/* Interactive Selection Cards */
 .payment-option-card {
     display: flex;
     align-items: center;
@@ -395,39 +362,107 @@
 .payment-option-info h5 { font-size: 14px; font-weight: 600; color: #18181b; margin-bottom: 2px; }
 .payment-option-info p { font-size: 12px; color: #71717a; }
 
+/* ==========================================================================
+   5. UTILS & DYNAMIC AUTH BUTTONS SYSTEM
+   ========================================================================== */
+.hm-head-moto-header-utils { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
 
-/* yhna pe kiya hai maine  */
-
-/* Utils & Buttons */
-.hm-head-moto-header-utils { display: flex; align-items: center; gap: 10px; }
-
+/* डेस्कटॉप व्यू के लिए जनरल बटन स्टाइल */
 .btn-login {
     text-decoration: none;
-    color: #0f172a;
+    color: #18181b;
     font-weight: 700;
     font-size: 13px;
-    padding: 8px 16px;
-    border: 1px solid #0f172a;
-    border-radius: 6px;
+    padding: 8px 20px;
+    border: 1px solid #18181b;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
-.btn-signup {
+.btn-login:hover {
+    background: #f4f4f5;
+}
+
+.btn-signup,
+.header-logout-btn {
     text-decoration: none;
-    background: #e11d48; /* Red */
-    color: #fff;
+    color: #18181b;
     font-weight: 700;
     font-size: 13px;
     padding: 8px 16px;
-    border-radius: 6px;
+    border: 1px solid #18181b;
+    border-radius: 8px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* Mobile Toggle - Sirf Mobile par */
-.hm-mobile-menu-toggle { display: none; background: none; border: none; font-size: 20px; cursor: pointer; }
+.btn-signup:hover,
+.header-logout-btn:hover {
+    background: #f4f4f5;
+}
 
+/* ==========================================================================
+   6. RESPONSIVE MEDIA VIEWPORTS (BREAKPOINTS)
+   ========================================================================== */
 @media (max-width: 768px) {
-    .hm-head-moto-navbar { display: none; }
-    .hm-mobile-menu-toggle { display: block; }
-    .btn-login { display: none; } /* Mobile pe space bachane ke liye login hide ya icon bana sakte ho */
+    .hm-head-moto-navbar { 
+        display: none; 
+    }
+    
+    .hm-mobile-menu-toggle { 
+        display: flex; /* हैमबर्गर आइकॉन दिखने लगेगा */
+    }
+    
+    .cart-drawer-panel {
+        width: 100%; 
+        right: -100%;
+    }
+
+    #auth-buttons-group {
+        display: none;
+    }
+
+    /* जब लॉग-इन न हो तो कार्ट को गायब करने का स्पेशल रूल */
+    .hide-cart {
+        display: none !important;
+    }
 }
 
+/* मोबाइल साइडबार (मेनू) के अंदर का लॉगिन और अकाउंट बटन्स का स्टाइल */
+.mobile-auth-wrapper {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #e4e4e7;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
+.mobile-auth-wrapper .btn-login-mob {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: #18181b;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.mobile-auth-wrapper .btn-account-mob {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: #0f172a;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}

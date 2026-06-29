@@ -5,81 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- तुम्हारी CSS फाइल -->
     <link rel="stylesheet" href="../style.css">
+    <!-- Supabase JS Library Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <title>Document</title>
 </head>
 
 <body>
+    <!-- HEADER NAVBAR -->
     <header class="hm-head-moto-header">
         <div class="hm-head-moto-header-container">
-            <button class="hm-mobile-menu-toggle" onclick="toggleMobileNav()"><i class="fa-solid fa-bars"></i></button>
+            <!-- Hamburger Menu Button -->
+            <button class="hm-mobile-menu-toggle" onclick="toggleMobileNav()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
+            <!-- Brand Logo -->
             <div class="hm-head-moto-logo-area">
-                <a href="../index.html"><img
-                        src="https://res.cloudinary.com/dhrqbdrkh/image/upload/v1782471800/dmotottech_awtowl.png"
-                        class="hm-head-moto-brand-logo"></a>
+                <a href="../index.html">
+                    <img src="https://res.cloudinary.com/dhrqbdrkh/image/upload/v1782471800/dmotottech_awtowl.png"
+                        class="hm-head-moto-brand-logo">
+                </a>
             </div>
 
+            <!-- Desktop Links -->
             <nav class="hm-head-moto-navbar">
                 <ul class="hm-head-moto-nav-list">
                     <li><a href="../index.html" class="web-link">Home</a></li>
-                    <li><a href="#" class="web-link">About</a></li>
+                    <li><a href="../About/About_page.html" class="web-link">About</a></li>
                     <li><a href="../Shop/Shop.html" class="web-link">Shop</a></li>
                     <li><a href="#" class="web-link">Blog</a></li>
                     <li><a href="#" class="web-link">Contact</a></li>
                 </ul>
             </nav>
 
+            <!-- Header Utilities Group -->
             <div class="hm-head-moto-header-utils">
-                <div id="auth-buttons-group">
-                    <a href="../My_Account_page/login.html" class="btn-login">Login</a>
-                    <a href="../My_Account_page/signup.html" class="btn-signup">Signup</a>
-                </div>
+                <!-- 🔴 डायनेमिक ऑथेंटिकेशन ग्रुप - यहाँ स्क्रिप्ट के ज़रिए सिर्फ Login या Account बटन आएगा -->
+                <div id="auth-buttons-group"></div>
 
-                <a href="javascript:void(0)" class="hm-head-moto-utility-link" onclick="toggleCartDrawer()">
+                <!-- Shopping Cart Icon -->
+                <a href="javascript:void(0)" class="hm-head-moto-utility-link" id="headerCartIcon"
+                    onclick="toggleCartDrawer()">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </a>
             </div>
         </div>
     </header>
 
-
-
-    <!-- Mobile Navigation -->
+    <!-- MOBILE DRAWER OVERLAY & PANEL -->
     <div class="hm-mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
 
     <div class="hm-mobile-nav-panel" id="mobileNavPanel">
-
         <div class="hm-mobile-nav-header">
-
             <img src="https://res.cloudinary.com/dhrqbdrkh/image/upload/v1782471800/dmotottech_awtowl.png"
                 style="height:40px;">
-
             <button class="hm-mobile-nav-close" onclick="closeMobileNav()">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-
         </div>
 
         <ul class="hm-mobile-nav-links">
-
             <li><a href="../index.html">Home</a></li>
-
             <li><a href="../About/About_page.html">About</a></li>
-
             <li><a href="../Shop/Shop.html">Shop</a></li>
-
             <li><a href="./blog.html">Blog</a></li>
-
             <li><a href="./contact.html">Contact</a></li>
-
-            <li><a href="../My_Account_page/My_account.html">My Account</a></li>
-
         </ul>
 
+        <!-- मोबाइल साइडबार (हैमबर्गर मेनू) के अंदर का लॉगिन/अकाउंट कंटेनर -->
+        <div class="mobile-auth-wrapper" id="mobileAuthContainer"></div>
     </div>
 
+    <!-- CART SLIDEOUT DRAWER -->
     <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
     <div class="cart-drawer-panel" id="cartDrawer">
         <div class="cart-drawer-header">
@@ -98,12 +98,75 @@
                 <span id="cartDrawerTotal" style="color:#18181b;">₹0</span>
             </div>
             <p style="font-size:11px; color:#a1a1aa; margin-bottom:16px; text-align:center;">Shipping & taxes calculated
-                at
-                checkout.</p>
+                at checkout.</p>
             <button class="checkout-razorpay-btn" onclick="triggerRazorpayCheckout()">Proceed to Checkout</button>
         </div>
     </div>
 
+    <!-- REALTIME SCRIPT LOGIC -->
+    <script>
+        // Supabase Init
+        const SUPABASE_URL = "https://ycipxljvymewdltlblvn.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function checkUserAuthenticationStatus() {
+            const authButtonGroup = document.getElementById('auth-buttons-group');
+            const mobileAuthContainer = document.getElementById('mobileAuthContainer');
+            const headerCartIcon = document.getElementById('headerCartIcon');
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+
+            if (session && session.user) {
+                // 🟢 केस 1: यूजर लॉग-इन है
+                // डेस्कटॉप/मोबाइल हेडर में 'Account' दिखाओ
+                authButtonGroup.innerHTML = `<a href="../My_Account_page/My_account.html" class="btn-account-head"><i class="fa-solid fa-user"></i> Account</a>`;
+
+                // मोबाइल साइडबार मेनू के अंदर भी 'My Account' दिखाओ
+                mobileAuthContainer.innerHTML = `<a href="../My_Account_page/My_account.html" class="btn-account-mob"><i class="fa-solid fa-user"></i> My Account Panel</a>`;
+
+                // कार्ट आइकॉन को दिखाओ
+                headerCartIcon.classList.remove('hide-cart');
+            } else {
+                // 🔴 केस 2: यूजर लॉग-इन नहीं है
+                // हेडर में सिर्फ "Login" बटन दिखेगा (साइनअप यहाँ से साफ़ गायब)
+                authButtonGroup.innerHTML = `<a href="../My_Account_page/login.html" class="btn-login">Login</a>`;
+
+                // मोबाइल साइडबार (हैमबर्गर मेनू) के अंदर भी सिर्फ "Login" का ही ऑप्शन रहेगा
+                mobileAuthContainer.innerHTML = `<a href="../My_Account_page/login.html" class="btn-login-mob">Login</a>`;
+
+                // कार्ट को छुपा दो
+                headerCartIcon.classList.add('hide-cart');
+            }
+        }
+
+        // DOM लोड होने पर चेक करो
+        document.addEventListener("DOMContentLoaded", checkUserAuthenticationStatus);
+
+        // मोबाइल मेनू ओपेन/क्लोज फंक्शन्स
+        function toggleMobileNav() {
+            const overlay = document.getElementById('mobileNavOverlay');
+            const panel = document.getElementById('mobileNavPanel');
+
+            overlay.classList.toggle('open');
+            panel.classList.toggle('open');
+        }
+
+        function closeMobileNav() {
+            document.getElementById('mobileNavOverlay').classList.remove('open');
+            document.getElementById('mobileNavPanel').classList.remove('open');
+        }
+
+        // कार्ट ड्रावर ओपेन/क्लोज फंक्शन
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            if (drawer && overlay) {
+                drawer.classList.toggle('open');
+                overlay.classList.toggle('open');
+            }
+        }
+    </script>
 </body>
 
 </html>

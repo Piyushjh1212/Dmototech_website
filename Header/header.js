@@ -91,54 +91,109 @@ async function initSupabase() {
 }
 
 
+let currentSession = null;
+
+function isHomePage() {
+    const path = window.location.pathname.replace(/\/+$/, "");
+    const fileName = path.split("/").pop().toLowerCase();
+    return !fileName || fileName === "index.html";
+}
+
+function isMobileView() {
+    return window.matchMedia("(max-width: 768px)").matches;
+}
+
+function getProjectPath(relativePath) {
+    const path = window.location.pathname.replace(/\\/g, "/");
+    const segments = path.split("/").filter(Boolean);
+
+    if (segments.length <= 1) {
+        return `./${relativePath}`;
+    }
+
+    const depth = "../".repeat(segments.length - 1);
+    return `${depth}${relativePath}`;
+}
+
 function updateAuthUI(session) {
 
+    currentSession = session;
+
     const authGroup = document.getElementById("auth-buttons-group");
+    const mobileAuthContainer = document.getElementById("mobileAuthContainer");
+    const headerCartIcon = document.getElementById("headerCartIcon");
 
-    if (!authGroup) return;
+    const isLoggedIn = Boolean(session && session.user);
+    const isMobile = isMobileView();
+    const showLogout = isLoggedIn && isHomePage();
+    const loginHref = getProjectPath("My_Account_page/login.html");
+    const signupHref = getProjectPath("My_Account_page/signup.html");
+    const accountHref = getProjectPath("My_Account_page/My_account.html");
 
-    if (session && session.user) {
+    if (authGroup) {
+        if (!isMobile) {
+            if (isLoggedIn) {
+                authGroup.innerHTML = `
+                    <a href="${accountHref}"
+                       class="btn-login"
+                       style="margin-right:10px;">
+                        My Account
+                    </a>
 
+                    ${showLogout ? `
+                        <button
+                            id="logoutBtn"
+                            class="header-logout-btn">
+                            Logout
+                        </button>
+                    ` : ""}
+                `;
 
-        authGroup.innerHTML = `
-            <a href="../My_Account_page/My_account.html"
-               class="btn-login"
-               style="margin-right:10px;">
-                My Account
-            </a>
+                const logoutBtn = document.getElementById("logoutBtn");
+                if (logoutBtn) {
+                    logoutBtn.addEventListener("click", logout);
+                }
+            } else {
+                authGroup.innerHTML = `
+                    <a href="${loginHref}"
+                       class="btn-login"
+                       style="margin-right:10px;">
+                       Login
+                    </a>
 
-            <button
-                id="logoutBtn"
-                style="
-                    border:none;
-                    background:none;
-                    cursor:pointer;
-                    color:#64748b;
-                    font-weight:600;
-                ">
-                Logout
-            </button>
-        `;
+                    <a href="${signupHref}"
+                       class="btn-signup">
+                       Signup
+                    </a>
+                `;
+            }
+        } else {
+            authGroup.innerHTML = "";
+        }
+    }
 
-        document
-            .getElementById("logoutBtn")
-            .addEventListener("click", logout);
+    if (mobileAuthContainer) {
 
-    } else {
+        if (isLoggedIn) {
+            mobileAuthContainer.innerHTML = `
+                <a href="${accountHref}" class="btn-account-mob">My Account</a>
+                ${showLogout ? `<button id="mobileLogoutBtn" class="btn-login-mob" style="background:#ef4444;">Logout</button>` : ""}
+            `;
 
-        authGroup.innerHTML = `
-            <a href="../My_Account_page/login.html"
-               class="btn-login"
-               style="margin-right:10px;">
-               Login
-            </a>
+            const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+            if (mobileLogoutBtn) {
+                mobileLogoutBtn.addEventListener("click", logout);
+            }
+        } else {
+            mobileAuthContainer.innerHTML = `
+                <a href="${loginHref}" class="btn-login-mob">Login</a>
+            `;
+        }
 
-            <a href="../My_Account_page/signup.html"
-               class="btn-signup">
-               Signup
-            </a>
-        `;
+    }
 
+    if (headerCartIcon) {
+        headerCartIcon.classList.toggle("hide-cart", !isLoggedIn);
     }
 
 }
@@ -159,7 +214,7 @@ async function logout() {
         }
 
 
-        window.location.href="../index.html";
+        window.location.href = getProjectPath("index.html");
 
     }
 
@@ -188,6 +243,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initSupabase();
 
+});
+
+window.addEventListener("resize", () => {
+    updateAuthUI(currentSession);
 });
 
 
