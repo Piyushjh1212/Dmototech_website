@@ -1,7 +1,7 @@
 
-        const SUPABASE_URL = "https://ycipxljvymewdltlblvn.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
-        const dochakiClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const PRODUCT_SUPABASE_URL = "https://ycipxljvymewdltlblvn.supabase.co";
+        const PRODUCT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
+        const dochakiClient = window.supabase.createClient(PRODUCT_SUPABASE_URL, PRODUCT_SUPABASE_ANON_KEY);
 
         // Core Cart Storage Engine Array Loop 
         let globalCart = JSON.parse(localStorage.getItem('dochaki_cart')) || [];
@@ -15,23 +15,65 @@
             const subId = getSubCategoryIdFromURL();
             if (!subId) { showErrorState(); return; }
 
+            document.getElementById('loading-state').style.display = 'block';
+            document.getElementById('error-state').style.display = 'none';
+
             try {
-                const [prodResponse, subCatResponse] = await Promise.all([
-                    dochakiClient.from('products').select('*').eq('sub_category_id', subId).order('id', { ascending: true }),
-                    dochakiClient.from('sub_categories').select('name').eq('id', subId).single()
-                ]);
+                const productFieldCandidates = ['sub_category_id', 'sub_category', 'subcategory_id', 'subCategoryId'];
+                let productsData = [];
+                let productsError = null;
 
-                if (prodResponse.error) throw prodResponse.error;
+                for (const field of productFieldCandidates) {
+                    const { data, error } = await dochakiClient
+                        .from('products')
+                        .select('*')
+                        .eq(field, subId)
+                        .order('id', { ascending: true });
 
-                if (subCatResponse.data) {
-                    document.getElementById('main-model-title').innerText = `${subCatResponse.data.name} Accessories`;
+                    if (!error) {
+                        productsData = data || [];
+                        productsError = null;
+                        break;
+                    }
+
+                    productsError = error;
+                    if (error?.message?.includes('column') || error?.message?.includes('does not exist')) {
+                        continue;
+                    }
+                    break;
                 }
 
-                renderProductsGrid(prodResponse.data);
-                syncCartLogicUI(); // Initial Storage Draw Sync
+                if (productsError && !productsData.length) {
+                    throw productsError;
+                }
+
+                try {
+                    const { data: subCatData, error: subCatError } = await dochakiClient
+                        .from('sub_categories')
+                        .select('name')
+                        .eq('id', subId)
+                        .maybeSingle();
+
+                    if (!subCatError && subCatData?.name) {
+                        document.getElementById('main-model-title').innerText = `${subCatData.name} Accessories`;
+                    }
+                } catch (subCatErr) {
+                    console.warn('Sub-category title fetch skipped:', subCatErr.message);
+                }
+
+                if (!productsData || productsData.length === 0) {
+                    document.getElementById('loading-state').style.display = 'none';
+                    document.getElementById('error-state').style.display = 'block';
+                    document.getElementById('error-state').innerText = 'No products found for this model yet.';
+                    document.getElementById('product-count').innerText = 'Showing 0 products';
+                    return;
+                }
+
+                renderProductsGrid(productsData);
+                syncCartLogicUI();
 
             } catch (err) {
-                console.error(err.message);
+                console.error('Products fetch failed:', err.message || err);
                 showErrorState();
             }
         }
@@ -155,8 +197,10 @@
             }
 
             globalCart.forEach(item => {
-                totalItems += item.qty;
-                totalPrice += (item.price * item.qty);
+                const itemPrice = Number(String(item.price).replace(/[^0-9.-]+/g, '')) || 0;
+                const itemQty = parseInt(item.qty, 10) || 0;
+                totalItems += itemQty;
+                totalPrice += (itemPrice * itemQty);
 
                 if (container) {
                     const fallbackImg = 'https://dmototech.co.in/wp-content/uploads/2026/01/G-310-GS.webp';
@@ -164,8 +208,8 @@
                     <div class="cart-live-item">
                         <img src="${item.img || fallbackImg}" alt="${item.name}" class="cart-live-img">
                         <div class="cart-live-details">
-                            <h4 class="cart-live-name">${item.name} <span style="color:#64748b; font-weight:400;">(x${item.qty})</span></h4>
-                            <span class="cart-live-price">₹${(item.price * item.qty).toLocaleString('en-IN')}</span>
+                            <h4 class="cart-live-name">${item.name} <span style="color:#64748b; font-weight:400;">(x${itemQty})</span></h4>
+                            <span class="cart-live-price">₹${(itemPrice * itemQty).toLocaleString('en-IN')}</span>
                         </div>
                         <button class="cart-live-remove" onclick="removeLiveCartItem(${item.id})">✕</button>
                     </div>

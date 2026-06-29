@@ -5,382 +5,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Checkout | DMotoTech Premium</title>
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="../Header/header.css">
+    <link rel="stylesheet" href="../header.css">
+    <link rel="stylesheet" href="./Checkout.css">
 
-    <!-- Razorpay SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="../Header/header.js"></script>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background-color: #f8fafc;
-            color: #0f172a;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Premium Navbar Header */
-        .checkout-navbar {
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 14px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            sticky: top;
-            z-index: 10;
-        }
-
-        .nav-logo img {
-            height: 40px;
-            object-fit: contain;
-        }
-
-        .secure-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #64748b;
-        }
-
-        .secure-badge i {
-            color: #22c55e;
-            font-size: 16px;
-        }
-
-        /* Main Split Container Layout */
-        .main-checkout-wrapper {
-            max-width: 1250px;
-            width: 100%;
-            margin: 40px auto;
-            padding: 0 24px;
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 32px;
-            flex-grow: 1;
-        }
-
-        /* Left Column: Payments Section */
-        .payment-section-box {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-            margin-bottom: 8px;
-            color: #0f172a;
-        }
-
-        .section-desc {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 28px;
-        }
-
-        .payment-methods-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .method-card {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            padding: 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-
-        .method-card:hover {
-            border-color: #0f172a;
-            background: #f8fafc;
-        }
-
-        .method-card.selected {
-            border-color: #0f172a;
-            background: #f8fafc;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-        }
-
-        .custom-radio {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #cbd5e1;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-
-        .method-card.selected .custom-radio {
-            border-color: #0f172a;
-        }
-
-        .method-card.selected .custom-radio::after {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: #0f172a;
-            border-radius: 50%;
-        }
-
-        .method-icon {
-            width: 48px;
-            height: 48px;
-            background: #f1f5f9;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0f172a;
-        }
-
-        .method-details {
-            flex-grow: 1;
-        }
-
-        .method-details h4 {
-            font-size: 15px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 2px;
-        }
-
-        .method-details p {
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        /* Right Column: Amazon-Style Summary Sidebar */
-        .summary-sidebar-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 24px;
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.02);
-        }
-
-        .sidebar-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        /* Live Products Mini List */
-        .checkout-items-list {
-            max-height: 240px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-bottom: 20px;
-            padding-right: 4px;
-        }
-
-        /* Custom Scrollbar for products */
-        .checkout-items-list::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .checkout-items-list::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-
-        .summary-product-item {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 1px dashed #e2e8f0;
-        }
-
-        .summary-product-item img {
-            width: 52px;
-            height: 52px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            flex-shrink: 0;
-        }
-
-        .p-info {
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .p-info h5 {
-            font-size: 13px;
-            font-weight: 600;
-            color: #0f172a;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .p-info p {
-            font-size: 11px;
-            color: #64748b;
-        }
-
-        .p-item-price {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0f172a;
-            text-align: right;
-        }
-
-        /* Pricing Invoice Breakdown */
-        .invoice-breakdown {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 16px 0;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .invoice-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .invoice-row.total-row {
-            font-size: 16px;
-            font-weight: 800;
-            color: #0f172a;
-            margin-top: 4px;
-        }
-
-        .total-row .total-price {
-            color: #ef4444;
-        }
-
-        /* Order CTA Button */
-        .place-order-btn {
-            width: 100%;
-            padding: 15px;
-            background: #0f172a;
-            color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .place-order-btn:hover {
-            background: #1e293b;
-        }
-
-        .return-link {
-            display: block;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 600;
-            color: #64748b;
-            text-decoration: none;
-            margin-top: 16px;
-            transition: color 0.2s;
-        }
-
-        .return-link:hover {
-            color: #0f172a;
-        }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 992px) {
-            .main-checkout-wrapper {
-                grid-template-columns: 1fr;
-                gap: 24px;
-                margin: 20px auto;
-            }
-
-            .summary-sidebar-card {
-                position: static;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
     <div id="global-header"></div>
 
-    <!-- MAIN INTERFACE -->
     <main class="main-checkout-wrapper">
 
-        <!-- LEFT COLUMN: PAYMENT SCHEME -->
         <section class="payment-section-box">
             <h2 class="section-title">Choose Payment Method</h2>
             <p class="section-desc">Select an option below to securely process and fulfill your order.</p>
 
             <div class="payment-methods-grid">
-                <!-- Method 1: Razorpay Gateway -->
-                <div class="method-card selected" id="opt-online" onclick="selectPaymentRoute('online')">
+                <div class="method-card selected" id="opt-online" onclick="selectPaymentRoute('online', this)">
                     <div class="custom-radio"></div>
-                    <div class="method-icon">
+                    <div class="method-icon" style="pointer-events: none;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                             <line x1="1" y1="10" x2="23" y2="10"></line>
                         </svg>
                     </div>
-                    <div class="method-details">
+                    <div class="method-details" style="pointer-events: none;">
                         <h4>Pay Online (Instant Verification)</h4>
                         <p>Pay smoothly using UPI, Cards, NetBanking, or Wallets via Razorpay</p>
                     </div>
                 </div>
 
-                <!-- Method 2: Cash on Delivery -->
-                <div class="method-card" id="opt-cod" onclick="selectPaymentRoute('cod')">
+                <div class="method-card" id="opt-cod" onclick="selectPaymentRoute('cod', this)">
                     <div class="custom-radio"></div>
-                    <div class="method-icon">
+                    <div class="method-icon" style="pointer-events: none;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                         </svg>
                     </div>
-                    <div class="method-details">
+                    <div class="method-details" style="pointer-events: none;">
                         <h4>Cash on Delivery (COD)</h4>
                         <p>Pay with cash direct at your doorstep upon handling shipment</p>
                     </div>
@@ -388,14 +61,11 @@
             </div>
         </section>
 
-        <!-- RIGHT COLUMN: AMAZON SYSTEM BREAKDOWN -->
         <aside class="summary-sidebar-card">
             <h3 class="sidebar-title">Order Summary</h3>
 
-            <!-- Dynamic Inject Item List Target -->
             <div class="checkout-items-list" id="checkoutItemsTarget"></div>
 
-            <!-- Financial Metrics Grid -->
             <div class="invoice-breakdown">
                 <div class="invoice-row">
                     <span>Items Subtotal:</span>
@@ -415,21 +85,37 @@
                 </div>
             </div>
 
-            <!-- Big Core CTA Button -->
             <button class="place-order-btn" onclick="executeSelectedOrderPayment()">
                 <i class="fa-solid fa-lock"></i> Complete My Order
             </button>
 
-            <a href="./index.html" class="return-link"><i class="fa-solid fa-chevron-left"
+            <a href="../index.html" class="return-link"><i class="fa-solid fa-chevron-left"
                     style="font-size:10px; margin-right:4px;"></i> Return & Edit Cart</a>
         </aside>
 
     </main>
 
-    <!-- CORE DATA PROCESSING CONTROLLER LOGIC -->
     <script>
+        // Variables ko sabse upar rakha hai taaki Supabase crash ho tab bhi ye load ho sakein
         let selectedPaymentMethod = 'online';
         let calculatedCartTotal = 0;
+        let checkoutSupabase = null;
+
+        // ======= SAFE INITIALIZATION SYSTEM =======
+        const CHECKOUT_URL = "https://ycipxljvymewdltlblvn.supabase.co";
+        const CHECKOUT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
+
+        try {
+            // Agar URL valid hai tabhi client banega, warna catch block sambhal lega
+            if (CHECKOUT_URL && CHECKOUT_URL.startsWith('http')) {
+                checkoutSupabase = window.supabase.createClient(CHECKOUT_URL, CHECKOUT_KEY);
+            } else if (typeof window.supabase !== 'undefined' && window.supabase.auth) {
+                // Agar upar placeholder hai toh header.js ka global instance utha lo
+                checkoutSupabase = window.supabase;
+            }
+        } catch (e) {
+            console.warn("Supabase connection deferred. Please update credentials on line 116.");
+        }
 
         function renderCheckoutOverview() {
             const activeCartItems = JSON.parse(localStorage.getItem('dochaki_cart')) || [];
@@ -437,14 +123,13 @@
 
             if (activeCartItems.length === 0) {
                 alert("Your cart is empty!");
-                window.location.href = "./index.html";
+                window.location.href = "../index.html";
                 return;
             }
 
             listContainer.innerHTML = '';
             calculatedCartTotal = 0;
 
-            // Generate Amazon Row Items dynamically
             activeCartItems.forEach(item => {
                 calculatedCartTotal += (item.price * item.qty);
                 const defaultFallback = 'https://dmototech.co.in/wp-content/uploads/2026/01/G-310-GS.webp';
@@ -463,53 +148,94 @@
                 listContainer.innerHTML += itemMarkup;
             });
 
-            // Re-map financial display indices
             document.getElementById('subtotalCost').innerText = '₹' + calculatedCartTotal.toLocaleString('en-IN');
             document.getElementById('finalTotalCost').innerText = '₹' + calculatedCartTotal.toLocaleString('en-IN');
         }
 
-        // Toggle Visual selection states
-        function selectPaymentRoute(method) {
+        // Yeh functions ab har haal me chalenge bina kisi initialization error ke!
+        function selectPaymentRoute(method, element) {
             selectedPaymentMethod = method;
-            document.querySelectorAll('.method-card').forEach(card => card.classList.remove('selected'));
 
-            if (method === 'online') {
-                document.getElementById('opt-online').classList.add('selected');
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            if (element) {
+                element.classList.add('selected');
             } else {
-                document.getElementById('opt-cod').classList.add('selected');
+                document.getElementById(method === 'online' ? 'opt-online' : 'opt-cod').classList.add('selected');
             }
         }
 
-        // Processing Pipeline Dispatcher
-        function executeSelectedOrderPayment() {
+        async function executeSelectedOrderPayment() {
+            // Fallback checking agar initialization fail hui ho
+            if (!checkoutSupabase) {
+                alert("⚠️ Configuration Missing: Please insert your valid Supabase HTTP/HTTPS URL and Key inside the code at line 116.");
+                return;
+            }
+
+            const { data: { user }, error: userError } = await checkoutSupabase.auth.getUser();
+
+            if (!user || userError) {
+                alert("🔒 Secure Checkout: Please login to complete your order.");
+                window.location.href = "../My_Account_page/login.html";
+                return;
+            }
+
+            const activeCartItems = JSON.parse(localStorage.getItem('dochaki_cart')) || [];
+
+            async function saveOrderToSupabase(paymentId = null) {
+                const { data, error } = await checkoutSupabase.from('orders').insert([
+                    {
+                        user_id: user.id,
+                        cart_data: activeCartItems,
+                        amount: calculatedCartTotal,
+                        payment_method: selectedPaymentMethod,
+                        status: selectedPaymentMethod === 'online' ? 'paid' : 'pending',
+                        payment_id: paymentId
+                    }
+                ]);
+
+                if (error) {
+                    console.error("Supabase Insertion Error:", error);
+                    alert("Order processed but database sync failed: " + error.message);
+                } else {
+                    if (selectedPaymentMethod === 'online') {
+                        alert(`🎉 Payment Successful!\nOrder successfully saved to profile.`);
+                    } else {
+                        alert("🎉 Order Confirmed via Cash on Delivery (COD)!\nThank you for shopping with DMotoTech.");
+                    }
+                    flushCartAndClose();
+                }
+            }
+
             if (selectedPaymentMethod === 'online') {
                 const options = {
-                    "key": "rzp_test_YOUR_KEY_HERE", // **Apni valid credentials yahan apply karein**
+                    "key": "rzp_test_T7NNbVYuQMBwvq",
                     "amount": calculatedCartTotal * 100,
                     "currency": "INR",
                     "name": "DMotoTech Premium Gear",
                     "description": "Secure Checkout Processing Hub",
                     "image": "https://res.cloudinary.com/dhrqbdrkh/image/upload/v1782471800/dmotottech_awtowl.png",
                     "handler": function (response) {
-                        alert(`Payment Successful!\nPayment ID: ${response.razorpay_payment_id}`);
-                        flushCartAndClose();
+                        saveOrderToSupabase(response.razorpay_payment_id);
                     },
                     "prefill": {
-                        "name": "Customer Name", "email": "customer@example.com", "contact": "9999999999"
+                        "name": user.email ? user.email.split('@')[0] : "Customer",
+                        "email": user.email
                     },
                     "theme": { "color": "#0f172a" }
                 };
                 const rzp = new Razorpay(options);
                 rzp.open();
             } else {
-                alert("🎉 Order Confirmed via Cash on Delivery (COD)!\nThank you for shopping with DMotoTech.");
-                flushCartAndClose();
+                await saveOrderToSupabase();
             }
         }
 
         function flushCartAndClose() {
             localStorage.removeItem('dochaki_cart');
-            window.location.href = "./index.html";
+            window.location.href = "../index.html";
         }
 
         window.addEventListener('DOMContentLoaded', renderCheckoutOverview);
@@ -519,11 +245,8 @@
         fetch('../Header/header.html')
             .then(response => response.text())
             .then(data => {
-
-                // Header inject karo
                 document.getElementById('global-header').innerHTML = data;
 
-                // ===== Sirf Cart Hide =====
                 const cartIcon = document.querySelector('[title="View Cart"]');
                 if (cartIcon) cartIcon.style.display = "none";
 
@@ -533,11 +256,7 @@
                 const cartOverlay = document.getElementById("cartOverlay");
                 if (cartOverlay) cartOverlay.style.display = "none";
 
-                // =========================
-
-                // Current page
                 let currentPage = window.location.pathname.split("/").pop();
-
                 if (currentPage === "" || currentPage === "/") {
                     currentPage = "index.html";
                 }
@@ -546,13 +265,10 @@
                 menuItems.forEach(li => li.classList.remove("active-li"));
 
                 let activeFound = false;
-
                 menuItems.forEach(li => {
                     const link = li.querySelector("a");
                     if (!link) return;
-
                     const href = link.getAttribute("href").replace("./", "");
-
                     if (href === currentPage) {
                         li.classList.add("active-li");
                         activeFound = true;
@@ -560,15 +276,9 @@
                 });
 
                 if (!activeFound) {
-                    const homeItem = document.querySelector(
-                        '.hm-head-moto-nav-list a[data-page="index.html"]'
-                    )?.parentElement;
-
-                    if (homeItem) {
-                        homeItem.classList.add("active-li");
-                    }
+                    const homeItem = document.querySelector('.hm-head-moto-nav-list a[data-page="index.html"]')?.parentElement;
+                    if (homeItem) homeItem.classList.add("active-li");
                 }
-
             })
             .catch(error => console.error("Header Load Error:", error));
     </script>

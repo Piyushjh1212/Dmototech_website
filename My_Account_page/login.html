@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login | DMotoTech</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .auth-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 360px;
+        }
+
+        h2 {
+            margin-bottom: 24px;
+            color: #0f172a;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #e11d48;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        a {
+            color: #e11d48;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-card">
+        <h2>Sign In</h2>
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-btn">Login</button>
+        <p class="footer-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
+    </div>
+
+    <script>
+        // ===============================
+        // SUPABASE CONFIG
+        // ===============================
+
+        const SUPABASE_URL = "https://ycipxljvymewdltlblvn.supabase.co";
+
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
+
+        const supabaseClient = supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
+            {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true,
+                    storage: window.localStorage
+                }
+            }
+        );
+
+        // ===============================
+        // LOGIN
+        // ===============================
+
+        document.getElementById("login-btn").addEventListener("click", loginUser);
+
+        async function loginUser() {
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const btn = document.getElementById("login-btn");
+
+            if (!email || !password) {
+                alert("Please enter email and password.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Logging in...";
+
+            try {
+
+                const { data, error } =
+                    await supabaseClient.auth.signInWithPassword({
+                        email,
+                        password
+                    });
+
+                if (error) throw error;
+
+                // Session confirm
+                const { data: sessionData } =
+                    await supabaseClient.auth.getSession();
+
+                if (!sessionData.session) {
+                    throw new Error("Session not created.");
+                }
+
+                console.log("Login Successful");
+
+                // Direct redirect
+                window.location.replace("../index.html");
+
+            }
+
+            catch (err) {
+
+                console.error(err);
+
+                alert(err.message);
+
+                btn.disabled = false;
+                btn.innerText = "Login";
+
+            }
+
+        }
+
+        // ===============================
+        // ENTER KEY SUPPORT
+        // ===============================
+
+        document.addEventListener("keydown", function (e) {
+
+            if (e.key === "Enter") {
+
+                loginUser();
+
+            }
+
+        });
+    </script>
+</body>
+
+</html>

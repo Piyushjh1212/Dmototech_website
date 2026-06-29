@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./Products.css ">
-    <link rel="stylesheet" href="../Header/header.css">
-    <link rel="stylesheet" href="../Footer/footer.css">
+    <link rel="stylesheet" href="../footer.css">
+    <link rel="stylesheet" href="../header.css">
 
 
 
@@ -68,85 +68,103 @@
     <div id="global-footer"></div>
 
     <script>
-        fetch('../Header/header.html')
-            .then(response => response.text())
-            .then(data => {
+        async function loadHeader() {
 
-                // Header inject karo
-                document.getElementById('global-header').innerHTML = data;
+            try {
 
-                // Header load hone ke baad cart sync karo
+                // Header Load
+                const response = await fetch("../Header/header.html");
+                const data = await response.text();
+
+                document.getElementById("global-header").innerHTML = data;
+
+                // Header inject hone do
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // Supabase Auth Initialize
+                if (typeof initSupabase === "function") {
+                    await initSupabase();
+                }
+
+                // Cart Sync
                 if (typeof forceSyncHomeCart === "function") {
                     forceSyncHomeCart();
                 }
 
-                // Current page
-                const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+                // ==========================
+                // ACTIVE MENU
+                // ==========================
 
-                // Sab active remove karo
+                let currentPage = window.location.pathname
+                    .split("/")
+                    .pop()
+                    .toLowerCase();
+
+                if (currentPage === "") {
+                    currentPage = "index.html";
+                }
+
+                if (currentPage === "products.html" || currentPage === "product_deatail.html") {
+                    currentPage = "shop.html";
+                }
+
                 const menuItems = document.querySelectorAll(".hm-head-moto-nav-list li");
+
                 menuItems.forEach(li => li.classList.remove("active-li"));
 
-                let activeFound = false;
-
-                // Current page active karo
                 menuItems.forEach(li => {
 
                     const link = li.querySelector("a");
+
                     if (!link) return;
 
-                    // href ka sirf filename lo
-                    const href = link.getAttribute("href").split("/").pop().toLowerCase();
+                    const fileName = link
+                        .getAttribute("href")
+                        .split("/")
+                        .pop()
+                        .toLowerCase();
 
-                    if (href === currentPage) {
+                    if (fileName === currentPage) {
                         li.classList.add("active-li");
-                        activeFound = true;
                     }
 
                 });
 
-                // Agar koi match na mile to Home active
-                if (!activeFound) {
-                    const homeItem = document.querySelector(
-                        '.hm-head-moto-nav-list a[data-page="index.html"]'
-                    )?.parentElement;
+            }
+            catch (err) {
 
-                    if (homeItem) {
-                        homeItem.classList.add("active-li");
-                    }
-                }
+                console.error("Header Load Error:", err);
 
-            })
-            .catch(error => console.error("Header Load Error:", error));
+            }
 
+        }
 
+        async function loadFooter() {
 
-        // global Footer
+            try {
 
+                const response = await fetch("../Footer/footer.html");
 
-        // GLOBAL FOOTER LOAD
+                const data = await response.text();
 
-        fetch('../Footer/footer.html')
+                document.getElementById("global-footer").innerHTML = data;
 
-            .then(response => response.text())
+            }
+            catch (err) {
 
-            .then(data => {
+                console.error("Footer Load Error:", err);
 
-                document.getElementById(
-                    "global-footer"
-                ).innerHTML = data;
+            }
 
-            })
+        }
 
-            .catch(error => {
+        document.addEventListener("DOMContentLoaded", async () => {
 
-                console.log(
-                    "Footer loading error",
-                    error
-                );
+            await loadHeader();
 
-            });
+            await loadFooter();
 
+        });
     </script>
 </body>
 

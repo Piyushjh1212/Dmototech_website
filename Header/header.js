@@ -1,3 +1,200 @@
+    // ================================
+    // MOBILE NAVIGATION
+    // ================================
+
+    function toggleMobileNav() {
+
+        const panel = document.getElementById("mobileNavPanel");
+        const overlay = document.getElementById("mobileNavOverlay");
+
+        if (!panel || !overlay) return;
+
+        panel.classList.add("open");
+        overlay.classList.add("open");
+
+        document.body.style.overflow = "hidden";
+
+    }
+
+    function closeMobileNav() {
+
+        const panel = document.getElementById("mobileNavPanel");
+        const overlay = document.getElementById("mobileNavOverlay");
+
+        if (!panel || !overlay) return;
+
+        panel.classList.remove("open");
+        overlay.classList.remove("open");
+
+        document.body.style.overflow = "";
+
+    }
+
+    document.addEventListener("keydown", (e) => {
+
+        if (e.key === "Escape") {
+
+            closeMobileNav();
+
+        }
+
+    }); 
+
+
+
+
+// =======================================
+// SUPABASE
+// =======================================
+
+const SUPABASE_URL = 'https://ycipxljvymewdltlblvn.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I';
+
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
+    {
+        auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true,
+            storage: window.localStorage
+        }
+    }
+);
+
+async function initSupabase() {
+
+    while (!document.getElementById("auth-buttons-group")) {
+
+        await new Promise(resolve => setTimeout(resolve,50));
+
+    }
+
+    const { data } =
+    await supabaseClient.auth.getSession();
+
+    updateAuthUI(data.session);
+
+    supabaseClient.auth.onAuthStateChange(
+        (event, session)=>{
+
+            console.log("AUTH EVENT :",event);
+
+            updateAuthUI(session);
+
+        }
+    );
+
+}
+
+
+function updateAuthUI(session) {
+
+    const authGroup = document.getElementById("auth-buttons-group");
+
+    if (!authGroup) return;
+
+    if (session && session.user) {
+
+
+        authGroup.innerHTML = `
+            <a href="../My_Account_page/My_account.html"
+               class="btn-login"
+               style="margin-right:10px;">
+                My Account
+            </a>
+
+            <button
+                id="logoutBtn"
+                style="
+                    border:none;
+                    background:none;
+                    cursor:pointer;
+                    color:#64748b;
+                    font-weight:600;
+                ">
+                Logout
+            </button>
+        `;
+
+        document
+            .getElementById("logoutBtn")
+            .addEventListener("click", logout);
+
+    } else {
+
+        authGroup.innerHTML = `
+            <a href="../My_Account_page/login.html"
+               class="btn-login"
+               style="margin-right:10px;">
+               Login
+            </a>
+
+            <a href="../My_Account_page/signup.html"
+               class="btn-signup">
+               Signup
+            </a>
+        `;
+
+    }
+
+}
+
+async function logout() {
+
+    try {
+
+        const { error } =
+        await supabaseClient.auth.signOut();
+
+        if (error) {
+
+            console.error(error);
+
+            return;
+
+        }
+
+
+        window.location.href="../index.html";
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+    }
+
+}
+
+
+// ========================================
+// INITIALIZE HEADER AUTH
+// ========================================
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    while (!window.supabase) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    while (!document.getElementById("auth-buttons-group")) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    initSupabase();
+
+});
+
+
+
+
+// Cart wala Option 
+
 
         let homeCartItems = [];
 
@@ -7,16 +204,6 @@
             const overlay = document.getElementById('cartOverlay');
             if (drawer && overlay) {
                 drawer.classList.toggle('open');
-                overlay.classList.toggle('open');
-            }
-        }
-
-        // === MOBILE RESPONSIVE NAVBAR CONTROLLER ===
-        function toggleMobileNav() {
-            const panel = document.getElementById('mobileNavPanel');
-            const overlay = document.getElementById('mobileNavOverlay');
-            if (panel && overlay) {
-                panel.classList.toggle('open');
                 overlay.classList.toggle('open');
             }
         }
@@ -47,8 +234,10 @@
 
             // Loop cards generation with explicit Name, Image & Pricing configurations
             homeCartItems.forEach(item => {
-                totalCount += item.qty;
-                totalPriceSum += (item.price * item.qty);
+                const itemPrice = Number(String(item.price).replace(/[^0-9.-]+/g, '')) || 0;
+                const itemQty = parseInt(item.qty, 10) || 0;
+                totalCount += itemQty;
+                totalPriceSum += (itemPrice * itemQty);
 
                 if (container) {
                     const fallbackImg = 'https://dmototech.co.in/wp-content/uploads/2026/01/G-310-GS.webp';
@@ -58,8 +247,8 @@
                 <div class="cart-live-item">
                     <img src="${itemImgSrc}" alt="${item.name}" class="cart-live-img">
                     <div class="cart-live-details">
-                        <h4 class="cart-live-name">${item.name} <span style="color:#64748b; font-weight:400;">(x${item.qty})</span></h4>
-                        <span class="cart-live-price">₹${(item.price * item.qty).toLocaleString('en-IN')}</span>
+                        <h4 class="cart-live-name">${item.name} <span style="color:#64748b; font-weight:400;">(x${itemQty})</span></h4>
+                        <span class="cart-live-price">₹${(itemPrice * itemQty).toLocaleString('en-IN')}</span>
                     </div>
                     <button class="cart-live-remove" onclick="removeHomeCartItem(${item.id})" title="Remove Product">✕</button>
                 </div>
@@ -94,7 +283,7 @@
         }
 
         // === LOAD AND EXTERNAL EVENT REGISTRATIONS ===
-        window.addEventListener('load', forceSyncHomeCart);
+        window.addEventListener('DOMContentLoaded', forceSyncHomeCart);
 
         // Listen if storage keys are mutated inside secondary page tabs
         window.addEventListener('storage', function (e) {
@@ -103,56 +292,9 @@
             }
         });
 
-
-        function toggleMobileNav() {
-            const panel = document.getElementById('mobileNavPanel');
-            const overlay = document.getElementById('mobileNavOverlay');
-            if (panel && overlay) {
-                panel.classList.toggle('open');
-                overlay.classList.toggle('open');
-            }
-        }
   
 
-        
+    
 
 
 
-        // ================================
-// MOBILE NAVIGATION
-// ================================
-
-function toggleMobileNav() {
-
-    const panel = document.getElementById("mobileNavPanel");
-    const overlay = document.getElementById("mobileNavOverlay");
-
-    panel.classList.add("open");
-    overlay.classList.add("open");
-
-    document.body.style.overflow = "hidden";
-
-}
-
-function closeMobileNav() {
-
-    const panel = document.getElementById("mobileNavPanel");
-    const overlay = document.getElementById("mobileNavOverlay");
-
-    panel.classList.remove("open");
-    overlay.classList.remove("open");
-
-    document.body.style.overflow = "";
-
-}
-
-// ESC Key Support
-document.addEventListener("keydown", function (e) {
-
-    if (e.key === "Escape") {
-
-        closeMobileNav();
-
-    }
-
-});

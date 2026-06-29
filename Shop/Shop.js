@@ -1,7 +1,7 @@
-        const SUPABASE_URL = "https://ycipxljvymewdltlblvn.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
+        const SHOP_SUPABASE_URL = "https://ycipxljvymewdltlblvn.supabase.co";
+        const SHOP_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljaXB4bGp2eW1ld2RsdGxibHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzNzA5MzksImV4cCI6MjA5Nzk0NjkzOX0.dleDKMUuavLtA_pPKicnBexgGb4SqOGM7oU7QoEBm9I";
 
-        const dochakiClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const dochakiClient = window.supabase.createClient(SHOP_SUPABASE_URL, SHOP_SUPABASE_ANON_KEY);
 
         let currentViewState = 'brands';
         let cachedCategoriesData = [];

@@ -167,31 +167,34 @@
 /* ==========================================================================
    3. MOBILE DRAWER NAVIGATION STYLES
    ========================================================================== */
-.hm-mobile-nav-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    z-index: 99996;
-    display: none;
+.hm-mobile-nav-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    backdrop-filter:none;
+    display:none;
+    z-index:99996;
 }
 
-.hm-mobile-nav-panel {
-    position: fixed;
-    top: 0; left: -280px;
-    width: 280px; height: 100vh;
-    background: #ffffff;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.05);
-    z-index: 99997;
-    transition: left 0.3s ease;
-    display: flex;
-    flex-direction: column;
+.hm-mobile-nav-overlay.open{
+    display:block;
 }
 
-.hm-mobile-nav-panel.open { left: 0; }
-.hm-mobile-nav-overlay.open { display: block; }
+.hm-mobile-nav-panel{
+    position:fixed;
+    top:0;
+    left:-280px;
+    width:280px;
+    height:100vh;
+    background:#fff;
+    transition:left .35s ease;
+    z-index:99997;
+    overflow-y:auto;
+}
 
+.hm-mobile-nav-panel.open{
+    left:0;
+}
 .hm-mobile-nav-header {
     padding: 20px;
     border-bottom: 1px solid #e4e4e7;
@@ -391,4 +394,40 @@
 .payment-option-info { flex-grow: 1; }
 .payment-option-info h5 { font-size: 14px; font-weight: 600; color: #18181b; margin-bottom: 2px; }
 .payment-option-info p { font-size: 12px; color: #71717a; }
+
+
+/* yhna pe kiya hai maine  */
+
+/* Utils & Buttons */
+.hm-head-moto-header-utils { display: flex; align-items: center; gap: 10px; }
+
+.btn-login {
+    text-decoration: none;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    border: 1px solid #0f172a;
+    border-radius: 6px;
+}
+
+.btn-signup {
+    text-decoration: none;
+    background: #e11d48; /* Red */
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+/* Mobile Toggle - Sirf Mobile par */
+.hm-mobile-menu-toggle { display: none; background: none; border: none; font-size: 20px; cursor: pointer; }
+
+@media (max-width: 768px) {
+    .hm-head-moto-navbar { display: none; }
+    .hm-mobile-menu-toggle { display: block; }
+    .btn-login { display: none; } /* Mobile pe space bachane ke liye login hide ya icon bana sakte ho */
+}
+
 

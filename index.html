@@ -7,16 +7,18 @@
   <title>Dochaki Products</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <link rel="stylesheet" href="./Header/header.css">
-  <link rel="stylesheet" href="./Footer/footer.css">
+  <link rel="stylesheet" href="./header.css">
+  <link rel="stylesheet" href="./footer.css">
 
 
   <link rel="stylesheet" href="style.css">
-  <script src="./Header/header.js"></script>
-  <script src="script.js"></script>
+  <script defer src="./Header/header.js"></script>
+  <script defer src="script.js"></script>
 </head>
 
 <body>
@@ -365,81 +367,94 @@
   <div id="global-footer"></div>
 
   <script>
-    fetch('./Header/header.html')
-      .then(response => response.text())
-      .then(data => {
+    async function loadHeader() {
 
-        // Header inject karo
+      try {
+
+        // Header Load
+        const response = await fetch('./Header/header.html');
+        const data = await response.text();
+
         document.getElementById('global-header').innerHTML = data;
 
-        // Current page
-        let currentPage = window.location.pathname.split("/").pop();
+        // Auth Init
+        if (typeof initSupabase === "function") {
+          await initSupabase();
+        }
 
-        // Homepage handle
-        if (currentPage === "" || currentPage === "/") {
+        // Cart Sync
+        if (typeof forceSyncHomeCart === "function") {
+          forceSyncHomeCart();
+        }
+
+        // Current Page
+        let currentPage = window.location.pathname
+          .split("/")
+          .pop()
+          .toLowerCase();
+
+        if (currentPage === "") {
           currentPage = "index.html";
         }
 
-        // Sab active remove karo
+        // Active Menu
         const menuItems = document.querySelectorAll(".hm-head-moto-nav-list li");
+
         menuItems.forEach(li => li.classList.remove("active-li"));
 
-        let activeFound = false;
-
-        // Current page active karo
         menuItems.forEach(li => {
 
           const link = li.querySelector("a");
+
           if (!link) return;
 
-          const href = link.getAttribute("href").replace("./", "");
+          const fileName = link
+            .getAttribute("href")
+            .split("/")
+            .pop()
+            .toLowerCase();
 
-          if (href === currentPage) {
+          if (fileName === currentPage) {
             li.classList.add("active-li");
-            activeFound = true;
           }
 
         });
 
-        // Agar koi page match na ho to Home active
-        if (!activeFound) {
-          const homeItem = document.querySelector(
-            '.hm-head-moto-nav-list a[data-page="index.html"]'
-          )?.parentElement;
+      }
+      catch (err) {
 
-          if (homeItem) {
-            homeItem.classList.add("active-li");
-          }
-        }
+        console.error("Header Load Error:", err);
 
-      })
-      .catch(error => console.error("Header Load Error:", error));
+      }
 
-    // global Footer
+    }
 
+    async function loadFooter() {
 
-    // GLOBAL FOOTER LOAD
+      try {
 
-    fetch('./Footer/footer.html')
+        const response = await fetch('./Footer/footer.html');
 
-      .then(response => response.text())
+        const data = await response.text();
 
-      .then(data => {
+        document.getElementById("global-footer").innerHTML = data;
 
-        document.getElementById(
-          "global-footer"
-        ).innerHTML = data;
+      }
+      catch (err) {
 
-      })
+        console.error("Footer Load Error:", err);
 
-      .catch(error => {
+      }
 
-        console.log(
-          "Footer loading error",
-          error
-        );
+    }
 
-      });
+    document.addEventListener("DOMContentLoaded", async () => {
+
+      await loadHeader();
+
+      await loadFooter();
+
+    });
   </script>
 </body>
 
